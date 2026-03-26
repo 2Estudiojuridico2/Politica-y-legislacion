@@ -3,262 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Política y Legislación de la Discapacidad - Interactive</title>
+    <title>Política y Legislación de la Discapacidad</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
-        .gradient-header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-        .card { transition: all 0.3s ease; border-radius: 1.5rem; }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        .loading-spinner { border-top-color: #3b82f6; animation: spin 1s linear infinite; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
+        .gradient-brand { background: linear-gradient(135deg, #0f172a 0%, #1e40af 100%); }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .loader { border-top-color: #3b82f6; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-6xl mx-auto">
-        <!-- Encabezado Principal -->
-        <header class="gradient-header text-white p-10 rounded-3xl shadow-2xl mb-12 text-center relative overflow-hidden">
-            <div class="relative z-10">
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-4">Derecho y Discapacidad</h1>
-                <p class="text-blue-100 text-xl font-light">Herramienta Pedagógica Inteligente para Docentes</p>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button onclick="speakMainConcept()" class="bg-white/20 hover:bg-white/30 px-6 py-2 rounded-full flex items-center gap-2 transition">
-                        <i class="fas fa-volume-up"></i> Escuchar Conceptos ✨
-                    </button>
+        <!-- Header con Controles de Voz -->
+        <header class="gradient-brand text-white p-8 md:p-12 rounded-[2rem] shadow-2xl mb-10 relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-2">Legislación y Discapacidad</h1>
+                    <p class="text-blue-200 text-lg">Marco Normativo Provincial y Nacional - Diseño Curricular</p>
+                </div>
+                <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/20">
+                    <p class="text-xs uppercase font-bold mb-2 text-blue-300">Asistente de Lectura ✨</p>
+                    <div class="flex gap-2">
+                        <button onclick="handleVoice('play')" id="playBtn" class="bg-green-500 hover:bg-green-400 p-3 rounded-full transition shadow-lg">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button onclick="handleVoice('stop')" id="stopBtn" class="bg-red-500 hover:bg-red-400 p-3 rounded-full transition shadow-lg opacity-50 cursor-not-allowed" disabled>
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                    <div id="voiceStatus" class="text-[10px] mt-2 text-center text-blue-100 italic">Listo para narrar</div>
                 </div>
             </div>
-            <!-- Círculos decorativos -->
-            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full"></div>
-            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full"></div>
         </header>
 
         <div class="grid lg:grid-cols-3 gap-8">
-            
-            <!-- Columna Izquierda: Teoría y Jerarquía -->
+            <!-- Columna de Contenidos Teóricos -->
             <div class="lg:col-span-2 space-y-8">
                 
-                <!-- Sección: Paradigmas -->
+                <!-- Modelos de Discapacidad -->
                 <section class="grid md:grid-cols-2 gap-6">
-                    <div class="card bg-white p-6 border-t-8 border-red-500 shadow-sm">
-                        <h3 class="text-red-600 font-bold flex items-center gap-2 mb-4">
-                            <i class="fas fa-microscope"></i> MODELO MÉDICO
-                        </h3>
-                        <p class="text-sm text-gray-600 italic mb-4">El individuo es el "problema" que debe ser curado.</p>
-                        <div class="space-y-2 text-sm text-gray-700">
-                            <div class="flex items-start gap-2"><i class="fas fa-ban mt-1 text-red-400"></i><span>Foco en el diagnóstico clínico.</span></div>
-                            <div class="flex items-start gap-2"><i class="fas fa-ban mt-1 text-red-400"></i><span>Busca la "normalización".</span></div>
-                            <div class="flex items-start gap-2"><i class="fas fa-ban mt-1 text-red-400"></i><span>Promueve la segregación educativa.</span></div>
-                        </div>
+                    <div class="glass-card p-6 rounded-3xl border-l-8 border-red-500">
+                        <h3 class="font-bold text-red-700 mb-3 uppercase tracking-tighter">Modelo Médico (Pasado)</h3>
+                        <p class="text-sm text-gray-600 mb-4 italic">"La discapacidad es una enfermedad que requiere cura o normalización."</p>
+                        <ul class="text-xs space-y-2 text-gray-500">
+                            <li>• Foco en el diagnóstico clínico y el paciente.</li>
+                            <li>• Educación segregada (Escuelas Especiales aisladas).</li>
+                        </ul>
                     </div>
-                    <div class="card bg-white p-6 border-t-8 border-green-500 shadow-sm">
-                        <h3 class="text-green-600 font-bold flex items-center gap-2 mb-4">
-                            <i class="fas fa-hands-helping"></i> MODELO SOCIAL
-                        </h3>
-                        <p class="text-sm text-gray-600 italic mb-4">La sociedad es la que genera barreras excluyentes.</p>
-                        <div class="space-y-2 text-sm text-gray-700">
-                            <div class="flex items-start gap-2"><i class="fas fa-check mt-1 text-green-400"></i><span>Sujeto de derechos y autonomía.</span></div>
-                            <div class="flex items-start gap-2"><i class="fas fa-check mt-1 text-green-400"></i><span>Eliminación de barreras del entorno.</span></div>
-                            <div class="flex items-start gap-2"><i class="fas fa-check mt-1 text-green-400"></i><span>Inclusión plena y apoyos.</span></div>
-                        </div>
+                    <div class="glass-card p-6 rounded-3xl border-l-8 border-green-500">
+                        <h3 class="font-bold text-green-700 mb-3 uppercase tracking-tighter">Modelo Social (Actual)</h3>
+                        <p class="text-sm text-gray-600 mb-4 italic">"La discapacidad surge de la interacción con barreras del entorno."</p>
+                        <ul class="text-xs space-y-2 text-gray-500">
+                            <li>• Sujeto de derechos y autonomía.</li>
+                            <li>• Inclusión y eliminación de barreras físicas/sociales.</li>
+                        </ul>
                     </div>
                 </section>
 
-                <!-- Bloque de Constitucionalidad -->
-                <section class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-                        <i class="fas fa-gavel text-blue-600"></i> Jerarquía de Normas
+                <!-- Leyes Clave -->
+                <section class="glass-card p-8 rounded-3xl">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                        <i class="fas fa-gavel text-blue-600"></i> Marco Normativo Obligatorio
                     </h2>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-blue-50 rounded-xl border-l-4 border-blue-800">
-                            <span class="text-xs font-bold text-blue-800 uppercase">Rango Constitucional</span>
-                            <h4 class="font-bold text-lg">Art. 75 inc. 23 CN</h4>
-                            <p class="text-sm text-gray-600">Obliga a "Acciones Positivas" para la igualdad real.</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-700">Ley Nacional 26.206</h4>
+                            <p class="text-xs text-slate-500 mt-1">Art. 42: La Educación Especial es modalidad transversal en todos los niveles.</p>
                         </div>
-                        <div class="p-4 bg-indigo-50 rounded-xl border-l-4 border-indigo-600 ml-4">
-                            <span class="text-xs font-bold text-indigo-800 uppercase">Ley Nacional</span>
-                            <h4 class="font-bold text-lg">Ley 26.206 (Educación Nacional)</h4>
-                            <p class="text-sm text-gray-600">La Educación Especial es una modalidad transversal (Art. 42).</p>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-700">Ley Provincial 13.688</h4>
+                            <p class="text-xs text-slate-500 mt-1">Art. 104: Garantiza la integración y la trayectoria educativa integral en PBA.</p>
                         </div>
-                        <div class="p-4 bg-violet-50 rounded-xl border-l-4 border-violet-500 ml-8">
-                            <span class="text-xs font-bold text-violet-800 uppercase">Ley Provincial</span>
-                            <h4 class="font-bold text-lg">Ley 13.688 (PBA)</h4>
-                            <p class="text-sm text-gray-600">Responsabilidad docente en la trayectoria integral (Art. 104).</p>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-700">Art. 75 inc. 23 CN</h4>
+                            <p class="text-xs text-slate-500 mt-1">Acciones positivas para garantizar igualdad real de oportunidades.</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                            <h4 class="font-bold text-slate-700">Ley 22.431</h4>
+                            <p class="text-xs text-slate-500 mt-1">Sistema de protección integral y base del CUD.</p>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <!-- Columna Derecha: IA Gemini API -->
-            <div class="space-y-8">
-                
-                <!-- Herramienta de IA: Analizador de Casos -->
-                <div class="card bg-blue-900 text-white p-6 shadow-xl relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
-                            <i class="fas fa-magic"></i> Analizador de Casos ✨
-                        </h3>
-                        <p class="text-blue-200 text-xs mb-4">Escribe un caso (ej: "Le negaron la rampa a un alumno") y la IA citará la ley.</p>
-                        <textarea id="caseInput" class="w-full bg-blue-800 border-none rounded-xl p-3 text-sm text-white placeholder-blue-400 focus:ring-2 focus:ring-blue-400" rows="3" placeholder="Describe el problema aquí..."></textarea>
-                        <button onclick="analyzeCase()" id="analyzeBtn" class="mt-4 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-xl transition flex items-center justify-center gap-2">
-                            <span>Analizar Situación ✨</span>
-                            <div id="loader" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full loading-spinner"></div>
-                        </button>
-                        <div id="analysisResult" class="mt-4 p-4 bg-blue-800/50 rounded-xl text-xs hidden leading-relaxed border border-blue-700">
-                            <!-- Resultado de la IA -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Herramienta de IA: Generador de Apoyos -->
-                <div class="card bg-white p-6 shadow-md border-2 border-dashed border-gray-300">
-                    <h3 class="text-gray-800 font-bold mb-3 flex items-center gap-2">
-                        <i class="fas fa-lightbulb text-yellow-500"></i> Generar Apoyos ✨
+            <!-- Columna de Herramientas IA -->
+            <div class="space-y-6">
+                <!-- Analizador de Casos -->
+                <div class="bg-slate-900 text-white p-6 rounded-[2rem] shadow-xl">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <i class="fas fa-robot text-blue-400"></i> Analizador Legal ✨
                     </h3>
-                    <select id="supportType" class="w-full p-2 border border-gray-200 rounded-lg text-sm mb-3">
-                        <option value="discapacidad motriz">Discapacidad Motriz</option>
-                        <option value="discapacidad sensorial visual">Sensorial Visual</option>
-                        <option value="discapacidad auditiva">Auditiva (LSA)</option>
-                        <option value="trastorno del espectro autista">TEA (Apoyos cognitivos)</option>
-                    </select>
-                    <button onclick="generateSupports()" id="supportBtn" class="w-full bg-gray-800 text-white py-2 rounded-lg text-sm hover:bg-gray-700 transition">
-                        Sugerir Configuraciones ✨
+                    <p class="text-xs text-slate-400 mb-4">Plantea un caso (ej. falta de vacante) para ver el fundamento legal.</p>
+                    <textarea id="caseText" class="w-full bg-slate-800 rounded-xl p-3 text-sm border-none focus:ring-2 focus:ring-blue-500 mb-4" rows="3" placeholder="Ej: Un colegio no permite que un alumno entre con su acompañante..."></textarea>
+                    <button onclick="processIA('case')" id="caseBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition">
+                        <span>Analizar Caso ✨</span>
+                        <div id="caseLoader" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full loader"></div>
                     </button>
-                    <div id="supportResult" class="mt-4 text-xs text-gray-600 hidden list-disc"></div>
+                    <div id="caseOutput" class="mt-4 p-4 bg-slate-800 rounded-xl text-xs leading-relaxed hidden border border-slate-700"></div>
                 </div>
 
+                <!-- Generador de Apoyos -->
+                <div class="glass-card p-6 rounded-[2rem]">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-lightbulb text-amber-500"></i> Estrategias DUA ✨
+                    </h3>
+                    <select id="supportType" class="w-full p-3 rounded-xl border-slate-200 text-sm mb-4">
+                        <option value="discapacidad motriz">Movilidad Reducida</option>
+                        <option value="TEA">Condición del Espectro Autista</option>
+                        <option value="visual">Discapacidad Visual</option>
+                        <option value="auditiva">Discapacidad Auditiva</option>
+                    </select>
+                    <button onclick="processIA('support')" id="supportBtn" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition">
+                        <span>Generar Apoyos ✨</span>
+                        <div id="supportLoader" class="hidden w-4 h-4 border-2 border-slate-800 border-t-transparent rounded-full loader"></div>
+                    </button>
+                    <div id="supportOutput" class="mt-4 p-4 bg-slate-50 rounded-xl text-xs text-slate-600 hidden"></div>
+                </div>
             </div>
         </div>
-
-        <!-- Footer -->
-        <footer class="mt-12 text-center text-gray-500 text-sm">
-            <p>Infografía interactiva basada en el Diseño Curricular de PBA.</p>
-            <p class="mt-2">"La ley es la voz de quien exige su lugar en el mundo."</p>
-        </footer>
     </div>
 
     <script>
-        const apiKey = ""; // La clave se inyecta automáticamente
+        const apiKey = ""; 
+        let currentAudioSource = null;
+        let audioCtx = null;
 
-        async function callGemini(prompt, systemPrompt = "") {
+        // Función central para llamadas a Gemini
+        async function fetchGemini(prompt, systemMsg = "") {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
+            const body = {
                 contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
+                systemInstruction: { parts: [{ text: systemMsg }] }
             };
 
-            let delay = 1000;
-            for (let i = 0; i < 5; i++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
-                } catch (e) {
-                    await new Promise(r => setTimeout(r, delay));
-                    delay *= 2;
-                }
-            }
-            throw new Error("Error de conexión con la IA.");
+            const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const data = await resp.json();
+            if (!data.candidates) throw new Error("API Limit reached or error");
+            return data.candidates[0].content.parts[0].text;
         }
 
-        async function analyzeCase() {
-            const input = document.getElementById('caseInput').value;
-            if (!input) return;
+        async function processIA(type) {
+            const isCase = type === 'case';
+            const btn = document.getElementById(isCase ? 'caseBtn' : 'supportBtn');
+            const loader = document.getElementById(isCase ? 'caseLoader' : 'supportLoader');
+            const output = document.getElementById(isCase ? 'caseOutput' : 'supportOutput');
+            const input = isCase ? document.getElementById('caseText').value : document.getElementById('supportType').value;
 
-            const btn = document.getElementById('analyzeBtn');
-            const loader = document.getElementById('loader');
-            const resultBox = document.getElementById('analysisResult');
+            if (isCase && !input) return;
 
             btn.disabled = true;
             loader.classList.remove('hidden');
-            resultBox.classList.remove('hidden');
-            resultBox.innerHTML = "Consultando marco legal...";
+            output.classList.remove('hidden');
+            output.innerHTML = "Consultando base de datos legal...";
 
             try {
-                const systemPrompt = "Eres un experto en legislación de discapacidad argentina (Leyes 22.431, 26.206, 13.688 y CN). Analiza el caso brevemente, cita qué leyes se vulneran y propone una solución desde el modelo social.";
-                const result = await callGemini(input, systemPrompt);
-                resultBox.innerHTML = `<strong>Análisis Legal:</strong><br>${result.replace(/\n/g, '<br>')}`;
-            } catch (error) {
-                resultBox.innerHTML = "Error al analizar. Por favor intenta de nuevo.";
+                let systemMsg = "Eres un experto en leyes de discapacidad en Argentina. Usa la Ley 26.206 (Nacional), la Ley 13.688 (PBA), el Art 75 inc 23 de la CN y la Convención Internacional. Responde de forma técnica pero accesible para docentes.";
+                let prompt = isCase 
+                    ? `Analiza legalmente este caso: "${input}". Cita artículos específicos y fundamenta desde el modelo social.` 
+                    : `Sugiere 3 configuraciones de apoyo pedagógico para un alumno con ${input} basándote en el diseño curricular de PBA y DUA.`;
+                
+                const result = await fetchGemini(prompt, systemMsg);
+                output.innerHTML = result.replace(/\n/g, '<br>');
+            } catch (e) {
+                output.innerHTML = "Error al conectar. Verifica la conexión e intenta de nuevo.";
             } finally {
                 btn.disabled = false;
                 loader.classList.add('hidden');
             }
         }
 
-        async function generateSupports() {
-            const type = document.getElementById('supportType').value;
-            const resBox = document.getElementById('supportResult');
-            const btn = document.getElementById('supportBtn');
+        // Sistema de Voz Inteligente con Gemini TTS
+        async function handleVoice(action) {
+            const playBtn = document.getElementById('playBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const status = document.getElementById('voiceStatus');
 
-            btn.disabled = true;
-            resBox.classList.remove('hidden');
-            resBox.innerHTML = "Generando estrategias...";
-
-            try {
-                const prompt = `Sugiere 3 configuraciones de apoyo concretas para un alumno con ${type} en una escuela secundaria, basadas en la Ley 26.206 y el diseño curricular de PBA. Sé conciso.`;
-                const result = await callGemini(prompt);
-                resBox.innerHTML = result.replace(/\n/g, '<br>');
-            } catch (e) {
-                resBox.innerHTML = "No se pudieron generar apoyos.";
-            } finally {
-                btn.disabled = false;
+            if (action === 'stop') {
+                if (currentAudioSource) {
+                    currentAudioSource.stop();
+                    currentAudioSource = null;
+                }
+                status.innerText = "Lectura detenida";
+                playBtn.disabled = false;
+                stopBtn.disabled = true;
+                stopBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
             }
-        }
 
-        async function speakMainConcept() {
-            const text = "La discapacidad no es un diagnóstico médico, es el resultado de la interacción entre una persona y las barreras que la sociedad impone. Como docentes, nuestra obligación legal según la Ley 26.206 es garantizar los apoyos necesarios para que la inclusión sea un derecho efectivo y no solo un discurso.";
-            
+            // Iniciar lectura
+            playBtn.disabled = true;
+            stopBtn.disabled = false;
+            stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            status.innerText = "Generando audio con IA...";
+
+            const textToRead = "La discapacidad no reside en la persona, sino en las barreras del entorno. Como establece la Ley 26.206, la Educación Especial es una modalidad transversal. El modelo social nos exige eliminar obstáculos físicos, comunicacionales y actitudinales para garantizar el derecho a la educación inclusiva.";
+
             try {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
                 const payload = {
-                    contents: [{ parts: [{ text: text }] }],
+                    contents: [{ parts: [{ text: textToRead }] }],
                     generationConfig: {
                         responseModalities: ["AUDIO"],
-                        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } }
+                        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } } }
                     }
                 };
 
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
+                const response = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
                 const data = await response.json();
-                const pcmData = data.candidates[0].content.parts[0].inlineData.data;
-                
-                // Conversión simple de PCM a Audio Context para reproducción
-                const binaryString = atob(pcmData);
-                const bytes = new Uint8Array(binaryString.length);
-                for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
-                
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const audioBuffer = audioContext.createBuffer(1, bytes.length / 2, 24000);
-                const channelData = audioBuffer.getChannelData(0);
+                const pcmBase64 = data.candidates[0].content.parts[0].inlineData.data;
+
+                // Convertir PCM a Audio
+                const binary = atob(pcmBase64);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const buffer = audioCtx.createBuffer(1, bytes.length / 2, 24000);
+                const channel = buffer.getChannelData(0);
                 const view = new DataView(bytes.buffer);
+                for (let i = 0; i < channel.length; i++) channel[i] = view.getInt16(i * 2, true) / 32768;
+
+                currentAudioSource = audioCtx.createBufferSource();
+                currentAudioSource.buffer = buffer;
+                currentAudioSource.connect(audioCtx.destination);
                 
-                for (let i = 0; i < channelData.length; i++) {
-                    channelData[i] = view.getInt16(i * 2, true) / 32768;
-                }
+                currentAudioSource.onended = () => handleVoice('stop');
                 
-                const source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-                source.connect(audioContext.destination);
-                source.start();
+                status.innerText = "Narrando contenido...";
+                currentAudioSource.start();
+
             } catch (e) {
-                console.error("TTS Error:", e);
-                // Fallback a speech synthesis nativo si falla el API
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'es-AR';
-                window.speechSynthesis.speak(utterance);
+                console.error(e);
+                status.innerText = "Error en el audio";
+                playBtn.disabled = false;
             }
         }
     </script>
