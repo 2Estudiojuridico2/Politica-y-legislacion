@@ -3,178 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compendio Legislativo: Discapacidad y Educación</title>
+    <title>Sinfonía Legal - Discapacidad</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
-        
-        :root {
-            --primary: #1e293b;
-            --accent: #2563eb;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap');
 
+        :root { --depth: 500px; }
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #f8fafc; 
-            color: #1e293b;
-            scroll-behavior: smooth;
+            background: #0f172a; 
+            font-family: 'Space+Grotesk', sans-serif; 
+            perspective: 1500px;
+            color: #f8fafc;
         }
 
-        .legal-content {
-            font-family: 'Merriweather', serif;
-            line-height: 1.8;
-            font-size: 1.05rem;
+        /* Efecto 3D de las capas */
+        .law-card {
+            transform-style: preserve-3d;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
         }
 
-        /* Efecto de apertura de acordeón */
+        .law-card:hover {
+            transform: translateZ(20px) rotateX(2deg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
         .accordion-content {
             display: grid;
             grid-template-rows: 0fr;
-            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: rotateX(-15deg);
+            transform-origin: top;
         }
-        .accordion-content.active {
+
+        .accordion-content.open {
             grid-template-rows: 1fr;
+            opacity: 1;
+            transform: rotateX(0deg);
+            margin-top: 1.5rem;
         }
 
-        /* Personalización de Scroll */
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
-        .hero-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        .legal-full-text {
+            font-family: 'Lora', serif;
+            line-height: 1.8;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
         }
 
-        .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        /* Estilo de scroll "glassmorphism" */
+        .scroll-area::-webkit-scrollbar { width: 5px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .floating { animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="p-4 md:p-12 min-h-screen">
 
-    <header class="hero-gradient text-white pb-20 pt-12 px-6 border-b-4 border-blue-500">
-        <div class="max-w-5xl mx-auto">
-            <div class="flex items-center gap-4 mb-6">
-                <div class="bg-blue-500/20 p-3 rounded-2xl backdrop-blur-md">
-                    <i class="fas fa-scale-balanced text-3xl text-blue-400"></i>
-                </div>
-                <span class="text-blue-400 font-bold tracking-[0.2em] uppercase text-sm">Formación Docente</span>
-            </div>
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-                Política y Legislación referida a la <span class="text-blue-400">Discapacidad</span>
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-16 text-center floating">
+            <h1 class="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 mb-4">
+                LexDisca 3D
             </h1>
-            <p class="text-slate-400 text-lg md:text-xl max-w-3xl leading-relaxed italic">
-                Marco orientador para el análisis y compilación de la legislación nacional y provincial de Buenos Aires.
+            <p class="text-slate-400 text-xl font-light tracking-widest uppercase">
+                Compendio Íntegro de Política y Legislación
             </p>
-        </div>
-    </header>
+        </header>
 
-    <main class="max-w-5xl mx-auto -mt-12 px-4 pb-20">
-        
-        <div class="bg-white p-4 rounded-3xl shadow-2xl mb-10 flex items-center gap-4 border border-slate-100">
-            <i class="fas fa-search text-slate-400 ml-4"></i>
-            <input type="text" id="busqueda" placeholder="Buscar por ley, palabra clave o tema..." 
-                   class="w-full py-3 outline-none text-slate-600 font-medium">
-        </div>
-
-        <div id="render-leyes" class="space-y-6">
+        <div id="app" class="grid gap-8">
             </div>
-    </main>
-
-    <footer class="bg-slate-900 text-slate-500 py-12 text-center border-t border-slate-800">
-        <p class="text-sm">Proyecto Educativo - Marco Legal Discapacidad</p>
-        <p class="text-xs mt-2 uppercase tracking-widest">Provincia de Buenos Aires - Argentina</p>
-    </footer>
+    </div>
 
     <script src="datos.js"></script>
-
     <script>
-        const renderContainer = document.getElementById('render-leyes');
-        const searchInput = document.getElementById('busqueda');
+        const app = document.getElementById('app');
 
-        function init() {
-            renderizar(BIBLIOTECA_NORMATIVA);
-            
-            // Lógica de búsqueda en tiempo real
-            searchInput.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtradas = BIBLIOTECA_NORMATIVA.filter(item => 
-                    item.titulo.toLowerCase().includes(term) || 
-                    item.subtitulo.toLowerCase().includes(term) ||
-                    item.capitulos.some(c => c.tituloCapitulo.toLowerCase().includes(term))
-                );
-                renderizar(filtradas);
-            });
-        }
-
-        function renderizar(data) {
-            renderContainer.innerHTML = '';
-            
-            if (data.length === 0) {
-                renderContainer.innerHTML = `<div class="text-center py-20 text-slate-400 italic">No se encontraron resultados para tu búsqueda.</div>`;
-                return;
-            }
-
-            data.forEach(ley => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-[2rem] border border-slate-200 overflow-hidden card-shadow transition-all duration-300 hover:border-blue-300';
-                
-                card.innerHTML = `
-                    <button class="w-full text-left p-8 flex justify-between items-center group bg-white">
+        function render() {
+            app.innerHTML = BIBLIOTECA.map((ley, index) => `
+                <div class="law-card glass rounded-3xl overflow-hidden shadow-2xl">
+                    <button onclick="toggle(${index})" class="w-full p-8 text-left flex justify-between items-center group">
                         <div class="flex items-center gap-6">
-                            <div class="${ley.color} w-16 h-16 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:scale-105 transition-transform">
-                                <i class="fas ${ley.icono}"></i>
-                            </div>
+                            <span class="text-4xl opacity-50 font-bold text-blue-500">${String(index + 1).padStart(2, '0')}</span>
                             <div>
-                                <h2 class="text-xl md:text-2xl font-bold text-slate-800">${ley.titulo}</h2>
-                                <p class="text-slate-500 font-medium text-sm mt-1 uppercase tracking-wide">${ley.subtitulo}</p>
+                                <h2 class="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">${ley.norma}</h2>
+                                <p class="text-blue-400/60 text-sm tracking-wider uppercase">${ley.categoria}</p>
                             </div>
                         </div>
-                        <i class="fas fa-chevron-down text-slate-300 transition-transform duration-500 btn-icon"></i>
+                        <i class="fas fa-plus transition-transform duration-500 text-blue-500" id="icon-${index}"></i>
                     </button>
-                    
-                    <div class="accordion-content">
-                        <div class="overflow-hidden">
-                            <div class="p-8 pt-0 space-y-8">
-                                ${ley.capitulos.map(cap => `
-                                    <div class="border-t border-slate-100 pt-6">
-                                        <h3 class="flex items-center gap-3 text-lg font-bold text-slate-700 mb-4">
-                                            <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
-                                            ${cap.tituloCapitulo}
+
+                    <div id="content-${index}" class="accordion-content">
+                        <div class="overflow-hidden p-8 pt-0">
+                            <div class="grid md:grid-cols-1 gap-6">
+                                ${ley.secciones.map(sec => `
+                                    <div class="border-l-2 border-blue-500/30 pl-6 mb-8">
+                                        <h3 class="text-emerald-400 font-bold mb-4 flex items-center gap-2">
+                                            <i class="fas fa-bookmark text-xs"></i> ${sec.titulo}
                                         </h3>
-                                        <div class="legal-content text-slate-600 bg-slate-50 p-6 rounded-2xl shadow-inner max-h-[400px] overflow-y-auto custom-scroll">
-                                            ${cap.textoHTML}
+                                        <div class="legal-full-text p-6 rounded-2xl text-slate-300 scroll-area max-h-[600px] overflow-y-auto">
+                                            ${sec.contenido}
                                         </div>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
                     </div>
-                `;
-
-                // Evento Click
-                card.querySelector('button').onclick = (e) => {
-                    const content = card.querySelector('.accordion-content');
-                    const icon = card.querySelector('.btn-icon');
-                    
-                    // Cerrar otros (opcional)
-                    document.querySelectorAll('.accordion-content').forEach(el => {
-                        if(el !== content) el.classList.remove('active');
-                    });
-                    document.querySelectorAll('.btn-icon').forEach(i => {
-                        if(i !== icon) i.style.transform = 'rotate(0deg)';
-                    });
-
-                    content.classList.toggle('active');
-                    icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
-                };
-
-                renderContainer.appendChild(card);
-            });
+                </div>
+            `).join('');
         }
 
-        init();
+        function toggle(index) {
+            const content = document.getElementById(`content-${index}`);
+            const icon = document.getElementById(`icon-${index}`);
+            const allContent = document.querySelectorAll('.accordion-content');
+            
+            content.classList.toggle('open');
+            icon.style.transform = content.classList.contains('open') ? 'rotate(45deg)' : 'rotate(0deg)';
+        }
+
+        render();
     </script>
 </body>
 </html>
