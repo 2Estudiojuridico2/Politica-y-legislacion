@@ -1,417 +1,180 @@
-import React, { useState, useEffect, useRef } from 'react';
-
-// --- API CONFIGURATION ---
-const apiKey = "AIzaSyBrjIS4M9NGZun5pnelaS93oUoLqxtD2ow"; 
-
-// --- NORMAS COMPLETAS Y ESTRUCTURADAS ---
-const LEGAL_LIBRARY = [
-  {
-    id: 'internacional',
-    title: 'Nivel Internacional (Jerarquía Constitucional)',
-    icon: '🌎',
-    content: [
-      {
-        section: 'Convención sobre los Derechos de las Personas con Discapacidad (CDPD)',
-        articles: [
-          {
-            num: 'Art. 1: Propósito',
-            text: 'El propósito de la presente Convención es promover, proteger y asegurar el goce pleno y en condiciones de igualdad de todos los derechos humanos y libertades fundamentales por todas las personas con discapacidad, y promover el respeto de su dignidad inherente. Las personas con discapacidad incluyen a aquellas que tengan deficiencias físicas, mentales, intelectuales o sensoriales a largo plazo que, al interactuar con diversas barreras, puedan impedir su participación plena y efectiva en la sociedad, en igualdad de condiciones con las demás.'
-          },
-          {
-            num: 'Art. 24: Educación',
-            text: 'Los Estados Partes reconocen el derecho de las personas con discapacidad a la educación. Con miras a hacer efectivo este derecho sin discriminación y sobre la base de la igualdad de oportunidades, los Estados Partes asegurarán un sistema de educación inclusivo a todos los niveles así como la enseñanza a lo largo de la vida... Al brindar esta educación, los Estados Partes asegurarán que: a) Las personas con discapacidad no queden excluidas del sistema general de educación por motivos de discapacidad... b) Las personas con discapacidad puedan acceder a una educación primaria y secundaria inclusiva, de calidad y gratuita, en igualdad de condiciones con las demás, en las comunidades en que vivan; c) Se hagan ajustes razonables en función de las necesidades individuales...'
-          }
-        ]
-      },
-      {
-        section: 'Convención sobre los Derechos del Niño (CDN)',
-        articles: [
-          {
-            num: 'Art. 23: Niños con discapacidad',
-            text: 'Los Estados Partes reconocen que el niño mental o físicamente impedido deberá disfrutar de una vida plena y decente en condiciones que aseguren su dignidad, le permitan llegar a bastarse a sí mismo y faciliten su participación activa en la comunidad... Se prestará la asistencia necesaria para asegurar que el niño impedido tenga un acceso efectivo a la educación, la capacitación, los servicios sanitarios, los servicios de rehabilitación, la preparación para el empleo y las oportunidades de esparcimiento.'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'nacional',
-    title: 'Nivel Nacional (Argentina)',
-    icon: '🇦🇷',
-    content: [
-      {
-        section: 'Constitución Nacional Argentina',
-        articles: [
-          {
-            num: 'Art. 75, inciso 23',
-            text: 'Corresponde al Congreso: Legislat y promover medidas de acción positiva que garanticen la igualdad real de oportunidades y de trato, y el pleno goce y ejercicio de los derechos reconocidos por esta Constitución y por los tratados internacionales vigentes sobre derechos humanos, en particular respecto de los niños, las mujeres, los ancianos y las personas con discapacidad. Dictar un régimen de seguridad social especial e integral en protección del niño en situación de desamparo, desde el embarazo hasta la finalización del período de enseñanza elemental, y de la madre durante el embarazo y el tiempo de lactancia.'
-          }
-        ]
-      },
-      {
-        section: 'Ley de Educación Nacional N° 26.206',
-        articles: [
-          {
-            num: 'Art. 11: Fines y Objetivos',
-            text: 'v) Brindar a las personas con discapacidades, temporales o permanentes, una propuesta pedagógica que les permita el máximo desarrollo de sus posibilidades, la integración y el pleno ejercicio de sus derechos.'
-          },
-          {
-            num: 'Art. 42: La Educación Especial',
-            text: 'La Educación Especial es la modalidad del Sistema Educativo destinada a asegurar el derecho a la educación de las personas con discapacidades, temporales o permanentes, en todos los niveles y modalidades del Sistema. Se rige por el principio de inclusión educativa y brinda atención educativa en todas aquellas problemáticas específicas que no puedan ser abordadas por la educación común.'
-          },
-          {
-            num: 'Art. 44: Obligaciones del Estado',
-            text: 'Establecer los procedimientos y recursos correspondientes para identificar tempranamente las necesidades educativas derivadas de la discapacidad o de trastornos en el desarrollo, con el objeto de brindar la orientación y el apoyo pertinente, favoreciendo trayectorias educativas integrales.'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'provincial',
-    title: 'Nivel Provincial (PBA)',
-    icon: '🏛️',
-    content: [
-      {
-        section: 'Ley de Educación Provincial N° 13.688',
-        articles: [
-          {
-            num: 'Art. 39: Definición',
-            text: 'La Educación Especial es la modalidad encargada de garantizar el derecho a la educación de las personas con discapacidad en todos los niveles del Sistema Educativo. Se define por la especificidad de sus propuestas pedagógicas.'
-          },
-          {
-            num: 'Art. 104: Derechos del Docente y Alumno',
-            text: 'Establece la obligatoriedad de articular entre la modalidad de Educación Especial y los niveles de enseñanza inicial, primaria y secundaria para asegurar la inclusión efectiva y el acompañamiento en las configuraciones de apoyo necesarias.'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'tramites',
-    title: 'CUD y Gestiones',
-    icon: '💳',
-    content: [
-      {
-        section: 'Certificado Único de Discapacidad (CUD)',
-        articles: [
-          {
-            num: '¿Qué es el CUD?',
-            text: 'Es un documento público de validez nacional que permite acceder a los derechos y a las prestaciones previstas en las leyes nacionales 22.431 y 24.901. Es la llave de acceso al sistema de protección integral.'
-          },
-          {
-            num: 'Requisitos para tramitarlo',
-            text: '1. Certificado médico actualizado (menos de 6 meses) con diagnóstico completo y estado funcional. 2. Estudios complementarios según patología. 3. DNI original y copia del interesado. 4. Si hay tutor, documentación que lo acredite.'
-          },
-          {
-            num: 'Pasos del trámite',
-            text: '1. Consulta en la junta evaluadora local (municipio). 2. Presentación de documentación. 3. Evaluación presencial por equipo interdisciplinario. 4. Entrega del certificado o denegatoria fundada.'
-          }
-        ]
-      }
-    ]
-  }
-];
-
-// --- UTILS: Fetch & Audio ---
-const fetchWithRetry = async (url, options, retries = 5) => {
-  const delay = (ms) => new Promise(res => setTimeout(res, ms));
-  for (let i = 0; i < retries; i++) {
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      return await response.json();
-    } catch (e) {
-      if (i === retries - 1) throw e;
-      await delay(Math.pow(2, i) * 1000);
-    }
-  }
-};
-
-const generateWavUrl = (base64Audio, sampleRate = 24000) => {
-  const binaryString = atob(base64Audio);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
-  const wavHeader = new ArrayBuffer(44);
-  const view = new DataView(wavHeader);
-  const writeString = (offset, string) => {
-    for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i));
-  };
-  writeString(0, 'RIFF');
-  view.setUint32(4, 36 + bytes.length, true);
-  writeString(8, 'WAVE');
-  writeString(12, 'fmt ');
-  view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
-  view.setUint16(22, 1, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * 2, true);
-  view.setUint16(32, 2, true);
-  view.setUint16(34, 16, true);
-  writeString(36, 'data');
-  view.setUint32(40, bytes.length, true);
-  return URL.createObjectURL(new Blob([wavHeader, bytes], { type: 'audio/wav' }));
-};
-
-export default function App() {
-  const [activeTab, setActiveTab] = useState('internacional');
-  const [openAccordions, setOpenAccordions] = useState({});
-  const [currentCase, setCurrentCase] = useState('Una escuela de nivel inicial rechaza la inscripción de un niño de 4 años alegando que no cuentan con maestra integradora disponible en el turno mañana.');
-  const [studentAnswer, setStudentAnswer] = useState('');
-  const [feedback, setFeedback] = useState(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isEvaluating, setIsEvaluating] = useState(false);
-  const [isPlayingTTS, setIsPlayingTTS] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  
-  const audioRef = useRef(null);
-
-  const toggleAccordion = (sectionIndex) => {
-    setOpenAccordions(prev => ({
-      ...prev,
-      [activeTab + sectionIndex]: !prev[activeTab + sectionIndex]
-    }));
-  };
-
-  // --- IA LOGIC ---
-  const handleGenerateCase = async () => {
-    if (!apiKey) { setErrorMsg("API Key faltante"); return; }
-    setIsGenerating(true);
-    setErrorMsg('');
-    setFeedback(null);
-    setStudentAnswer('');
-    
-    const prompt = `Genera un caso de conflicto legal en educación especial (Argentina). Enfócate en barreras de acceso, falta de ajustes razonables o rechazo de vacantes. Sé breve y profesional.`;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-    
-    try {
-      const data = await fetchWithRetry(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) setCurrentCase(text.trim());
-    } catch (e) { setErrorMsg("Error al generar caso."); }
-    finally { setIsGenerating(false); }
-  };
-
-  const handleEvaluate = async () => {
-    if (!studentAnswer.trim()) { setErrorMsg("Escribe tu respuesta."); return; }
-    setIsEvaluating(true);
-    setErrorMsg('');
-    
-    const prompt = `Analiza la siguiente respuesta sobre el caso: "${currentCase}". El alumno respondió: "${studentAnswer}". 
-    Evalúa basándote estrictamente en: CN Art 75 inc 23, Ley 26.206, Ley 13.688 y CDPD Art 24. 
-    Da una devolución pedagógica para un docente de nivel especial. Sé riguroso pero constructivo.`;
-    
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-    
-    try {
-      const data = await fetchWithRetry(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      setFeedback(data.candidates?.[0]?.content?.parts?.[0]?.text);
-    } catch (e) { setErrorMsg("Error al evaluar."); }
-    finally { setIsEvaluating(false); }
-  };
-
-  const handleTTS = async (textToSpeak) => {
-    if (!apiKey) return;
-    setIsPlayingTTS(true);
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-    try {
-      const data = await fetchWithRetry(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: textToSpeak }] }],
-          generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Aoede" } } } },
-          model: "gemini-2.5-flash-preview-tts"
-        })
-      });
-      const audioPart = data.candidates?.[0]?.content?.parts?.[0]?.inlineData;
-      if (audioPart && audioRef.current) {
-        audioRef.current.src = generateWavUrl(audioPart.data);
-        audioRef.current.play();
-        audioRef.current.onended = () => setIsPlayingTTS(false);
-      }
-    } catch (e) { setIsPlayingTTS(false); }
-  };
-
-  return (
-    <div className="min-h-screen bg-[#f0f2f5] p-4 md:p-8 font-sans selection:bg-indigo-100">
-      <header className="max-w-7xl mx-auto mb-10 text-center md:text-left flex flex-col md:flex-row justify-between items-end gap-4">
-        <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-            CAMPUS JURÍDICO <span className="text-indigo-600">ESPECIAL</span>
-          </h1>
-          <p className="text-slate-500 font-medium mt-1">Marco Normativo Integral y Práctica de Residencia</p>
-        </div>
-        <div className="bg-white px-4 py-2 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-3">
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-sm font-bold text-slate-600">Material Autogestionado 2024</span>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compendio Legislativo: Discapacidad y Educación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
         
-        {/* LIBRERIA LEGAL - COL IZQUIERDA */}
-        <div className="lg:col-span-7 space-y-6">
-          
-          {/* TABS 3D */}
-          <div className="flex flex-wrap gap-2 p-1 bg-slate-200/50 rounded-2xl backdrop-blur-sm">
-            {LEGAL_LIBRARY.map((lib) => (
-              <button
-                key={lib.id}
-                onClick={() => setActiveTab(lib.id)}
-                className={`flex-1 min-w-[120px] py-3 px-4 rounded-xl font-bold transition-all duration-300 transform ${
-                  activeTab === lib.id 
-                  ? 'bg-white text-indigo-700 shadow-[0_10px_20px_-5px_rgba(79,70,229,0.3)] scale-105 -translate-y-1' 
-                  : 'text-slate-500 hover:bg-white/50'
-                }`}
-              >
-                <span className="mr-2">{lib.icon}</span>
-                {lib.title.split(' ')[0]}
-              </button>
-            ))}
-          </div>
+        :root {
+            --primary: #1e293b;
+            --accent: #2563eb;
+        }
 
-          {/* CONTENIDO DESPLEGABLE */}
-          <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden transition-all animate-in fade-in slide-in-from-bottom-4">
-            <div className="p-6 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-              <h2 className="text-xl font-black text-slate-800 uppercase tracking-wide">
-                {LEGAL_LIBRARY.find(l => l.id === activeTab).title}
-              </h2>
-              <span className="text-xs font-bold text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
-                Texto Íntegro
-              </span>
-            </div>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f8fafc; 
+            color: #1e293b;
+            scroll-behavior: smooth;
+        }
 
-            <div className="p-4 space-y-4">
-              {LEGAL_LIBRARY.find(l => l.id === activeTab).content.map((section, sIdx) => (
-                <div key={sIdx} className="border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-                  <button 
-                    onClick={() => toggleAccordion(sIdx)}
-                    className="w-full flex justify-between items-center p-4 bg-white hover:bg-slate-50 transition-colors"
-                  >
-                    <span className="font-bold text-slate-700">{section.section}</span>
-                    <svg 
-                      className={`w-5 h-5 transition-transform duration-300 ${openAccordions[activeTab + sIdx] ? 'rotate-180' : ''}`} 
-                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    ><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
-                  </button>
-                  
-                  {openAccordions[activeTab + sIdx] && (
-                    <div className="p-4 bg-slate-50 border-t border-slate-100 space-y-6 animate-in slide-in-from-top-2">
-                      {section.articles.map((art, aIdx) => (
-                        <div key={aIdx} className="bg-white p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm">
-                          <h4 className="font-black text-indigo-600 text-sm mb-2 uppercase tracking-tighter">{art.num}</h4>
-                          <p className="text-slate-700 leading-relaxed text-sm italic">"{art.text}"</p>
-                          <div className="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">Fuente: Boletín Oficial</span>
-                            <button 
-                              onClick={() => handleTTS(art.text)}
-                              className="text-xs font-bold text-indigo-500 flex items-center gap-1 hover:underline"
-                            >
-                              🔊 Escuchar Artículo
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+        .legal-content {
+            font-family: 'Merriweather', serif;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Efecto de apertura de acordeón */
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .accordion-content.active {
+            grid-template-rows: 1fr;
+        }
+
+        /* Personalización de Scroll */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <header class="hero-gradient text-white pb-20 pt-12 px-6 border-b-4 border-blue-500">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-blue-500/20 p-3 rounded-2xl backdrop-blur-md">
+                    <i class="fas fa-scale-balanced text-3xl text-blue-400"></i>
                 </div>
-              ))}
+                <span class="text-blue-400 font-bold tracking-[0.2em] uppercase text-sm">Formación Docente</span>
             </div>
-          </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+                Política y Legislación referida a la <span class="text-blue-400">Discapacidad</span>
+            </h1>
+            <p class="text-slate-400 text-lg md:text-xl max-w-3xl leading-relaxed italic">
+                Marco orientador para el análisis y compilación de la legislación nacional y provincial de Buenos Aires.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto -mt-12 px-4 pb-20">
+        
+        <div class="bg-white p-4 rounded-3xl shadow-2xl mb-10 flex items-center gap-4 border border-slate-100">
+            <i class="fas fa-search text-slate-400 ml-4"></i>
+            <input type="text" id="busqueda" placeholder="Buscar por ley, palabra clave o tema..." 
+                   class="w-full py-3 outline-none text-slate-600 font-medium">
         </div>
 
-        {/* PRACTICA INTERACTIVA - COL DERECHA */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-slate-900 rounded-3xl shadow-2xl p-6 md:p-8 text-white relative overflow-hidden">
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+        <div id="render-leyes" class="space-y-6">
+            </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-500 py-12 text-center border-t border-slate-800">
+        <p class="text-sm">Proyecto Educativo - Marco Legal Discapacidad</p>
+        <p class="text-xs mt-2 uppercase tracking-widest">Provincia de Buenos Aires - Argentina</p>
+    </footer>
+
+    <script src="datos.js"></script>
+
+    <script>
+        const renderContainer = document.getElementById('render-leyes');
+        const searchInput = document.getElementById('busqueda');
+
+        function init() {
+            renderizar(BIBLIOTECA_NORMATIVA);
             
-            <div className="relative z-10">
-              <div className="flex justify-between items-center mb-6">
-                <span className="bg-indigo-500 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
-                  Laboratorio de Casos
-                </span>
-                <button 
-                  onClick={handleGenerateCase}
-                  disabled={isGenerating}
-                  className="p-2 hover:bg-white/10 rounded-full transition-colors text-indigo-300"
-                  title="Nuevo Caso"
-                >
-                  <svg className={`w-6 h-6 ${isGenerating ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                </button>
-              </div>
+            // Lógica de búsqueda en tiempo real
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtradas = BIBLIOTECA_NORMATIVA.filter(item => 
+                    item.titulo.toLowerCase().includes(term) || 
+                    item.subtitulo.toLowerCase().includes(term) ||
+                    item.capitulos.some(c => c.tituloCapitulo.toLowerCase().includes(term))
+                );
+                renderizar(filtradas);
+            });
+        }
 
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-8">
-                <h3 className="text-xl font-bold mb-3 text-indigo-300 italic">Situación Problemática:</h3>
-                <p className="text-lg leading-snug font-medium text-slate-200">
-                  {currentCase}
-                </p>
-              </div>
+        function renderizar(data) {
+            renderContainer.innerHTML = '';
+            
+            if (data.length === 0) {
+                renderContainer.innerHTML = `<div class="text-center py-20 text-slate-400 italic">No se encontraron resultados para tu búsqueda.</div>`;
+                return;
+            }
 
-              <div className="space-y-4">
-                <label className="text-sm font-bold text-slate-400 block ml-1">Escribe tu fundamentación:</label>
-                <textarea 
-                  value={studentAnswer}
-                  onChange={(e) => setStudentAnswer(e.target.value)}
-                  placeholder="Inicia citando la normativa... 'Ante esta vulneración, el Art. 24 de la CDPD establece...'"
-                  className="w-full bg-white/10 border border-white/20 rounded-2xl p-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 h-40 transition-all placeholder:text-slate-600"
-                ></textarea>
+            data.forEach(ley => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-[2rem] border border-slate-200 overflow-hidden card-shadow transition-all duration-300 hover:border-blue-300';
                 
-                {errorMsg && <p className="text-red-400 text-xs font-bold">{errorMsg}</p>}
+                card.innerHTML = `
+                    <button class="w-full text-left p-8 flex justify-between items-center group bg-white">
+                        <div class="flex items-center gap-6">
+                            <div class="${ley.color} w-16 h-16 rounded-2xl flex items-center justify-center text-2xl shadow-inner group-hover:scale-105 transition-transform">
+                                <i class="fas ${ley.icono}"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-bold text-slate-800">${ley.titulo}</h2>
+                                <p class="text-slate-500 font-medium text-sm mt-1 uppercase tracking-wide">${ley.subtitulo}</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down text-slate-300 transition-transform duration-500 btn-icon"></i>
+                    </button>
+                    
+                    <div class="accordion-content">
+                        <div class="overflow-hidden">
+                            <div class="p-8 pt-0 space-y-8">
+                                ${ley.capitulos.map(cap => `
+                                    <div class="border-t border-slate-100 pt-6">
+                                        <h3 class="flex items-center gap-3 text-lg font-bold text-slate-700 mb-4">
+                                            <span class="w-2 h-6 bg-blue-500 rounded-full"></span>
+                                            ${cap.tituloCapitulo}
+                                        </h3>
+                                        <div class="legal-content text-slate-600 bg-slate-50 p-6 rounded-2xl shadow-inner max-h-[400px] overflow-y-auto custom-scroll">
+                                            ${cap.textoHTML}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-                <button 
-                  onClick={handleEvaluate}
-                  disabled={isEvaluating}
-                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-3"
-                >
-                  {isEvaluating ? (
-                    <div className="flex gap-1"><div className="w-2 h-2 bg-white rounded-full animate-bounce"></div><div className="w-2 h-2 bg-white rounded-full animate-bounce delay-75"></div><div className="w-2 h-2 bg-white rounded-full animate-bounce delay-150"></div></div>
-                  ) : (
-                    "ENVIAR A SUPERVISIÓN VIRTUAL"
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
+                // Evento Click
+                card.querySelector('button').onclick = (e) => {
+                    const content = card.querySelector('.accordion-content');
+                    const icon = card.querySelector('.btn-icon');
+                    
+                    // Cerrar otros (opcional)
+                    document.querySelectorAll('.accordion-content').forEach(el => {
+                        if(el !== content) el.classList.remove('active');
+                    });
+                    document.querySelectorAll('.btn-icon').forEach(i => {
+                        if(i !== icon) i.style.transform = 'rotate(0deg)';
+                    });
 
-          {/* FEEDBACK AREA */}
-          {feedback && (
-            <div className="bg-white rounded-3xl p-6 border-t-8 border-indigo-600 shadow-xl animate-in fade-in zoom-in">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">IA</div>
-                <div>
-                  <h4 className="font-black text-slate-800 text-sm">Devolución Profesional</h4>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Basado en Diseño Curricular 1er Año</p>
-                </div>
-              </div>
-              <div className="text-slate-700 text-sm leading-relaxed space-y-3">
-                {feedback.split('\n').map((line, i) => <p key={i}>{line}</p>)}
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
+                    content.classList.toggle('active');
+                    icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+                };
 
-      <audio ref={audioRef} className="hidden" />
+                renderContainer.appendChild(card);
+            });
+        }
 
-      <footer className="max-w-7xl mx-auto mt-12 py-8 border-t border-slate-200 text-center text-slate-400">
-        <p className="text-xs font-bold uppercase tracking-widest">
-          Herramienta de Apoyo para Estudiantes del Profesorado de Educación Especial
-        </p>
-        <p className="text-[10px] mt-2">© 2024 - Todos los contenidos legales corresponden al marco vigente en la República Argentina y PBA.</p>
-      </footer>
-    </div>
-  );
-}
+        init();
+    </script>
+</body>
+</html>
