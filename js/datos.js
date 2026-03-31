@@ -1,92 +1,81 @@
 // ==========================================
-// BASE DE DATOS ESTRUCTURADA - LEXDISCA 3D
+// BASE DE DATOS RELACIONAL - LEXDISCA 3D
 // ==========================================
 
-// 1. EL PLAN DE ESTUDIOS (Las Unidades del Roadmap)
 const UNIDADES = [
+    { id: 1, numero: "01", titulo: "Fundamentos y Modelos", desc: "Modelo Médico vs. Modelo Social. Discriminación y Marco Constitucional.", color: "cyan", icon: "fa-gavel" },
+    { id: 3, numero: "03", titulo: "Protección Integral", desc: "Ley 22.431, CUD y la Convención Internacional.", color: "emerald", icon: "fa-shield-alt" },
+    { id: 7, numero: "07", titulo: "Rol Docente y Educación", desc: "Leyes de Educación y Estatuto Docente (Ley 10.579).", color: "violet", icon: "fa-chalkboard-teacher" }
+];
+
+const LEYES_DB = [
     { 
-        id: 1, numero: "01", 
-        titulo: "Fundamentos Jurídicos y Discriminación", 
-        desc: "Análisis de la exclusión, Marco Internacional (OEA), Derechos Humanos y Sistema de Fuentes.", 
-        color: "cyan", icon: "fa-gavel" 
+        eje: 1, titulo: "Constitución Nacional - Art. 75 inc. 23", 
+        texto: "Corresponde al Congreso: Legislar y promover medidas de acción positiva que garanticen la igualdad real de oportunidades y de trato... en particular respecto de los niños, las mujeres, los ancianos y las personas con discapacidad." 
     },
     { 
-        id: 2, numero: "02", 
-        titulo: "Políticas Públicas y Personalidad Jurídica", 
-        desc: "La población con discapacidad en Argentina. Derechos Económicos, Sociales y Culturales (DESC).", 
-        color: "violet", icon: "fa-users" 
+        eje: 3, titulo: "Convención Internacional de los Derechos de las Personas con Discapacidad (Ley 26.378)", 
+        texto: "La discapacidad es un concepto que evoluciona y que resulta de la interacción entre las personas con deficiencias y las BARRERAS debidas a la actitud y al entorno que evitan su participación plena y efectiva en la sociedad, en igualdad de condiciones con las demás (Modelo Social)." 
     },
     { 
-        id: 3, numero: "03", 
-        titulo: "Protección Integral y el Estado", 
-        desc: "Constitución Nacional (Arts. 14, 75), Ley 22.431, obtención del CUD y Organizaciones Sociales.", 
-        color: "emerald", icon: "fa-shield-alt" 
-    },
-    { 
-        id: 7, numero: "07", // Salto al Eje 7 para mostrar el Estatuto
-        titulo: "El Rol Docente en el Marco Legal", 
-        desc: "Ley de Educación 26.206 y 13.688. Estatuto del Docente (Ley 10.579). Ética profesional.", 
-        color: "cyan", icon: "fa-chalkboard-teacher" 
+        eje: 7, titulo: "Ley de Educación Nacional 26.206 - Art. 42", 
+        texto: "La Educación Especial es la modalidad del sistema educativo destinada a asegurar el derecho a la educación de las personas con discapacidades... La Educación Especial se rige por el principio de inclusión educativa." 
     }
 ];
 
-// 2. MARCO NORMATIVO (Leyes)
-const LEYES_DB = `
-    <div class="glass-panel p-6 rounded-2xl mb-4">
-        <h4 class="text-xl font-bold text-white border-l-4 border-cyan-500 pl-3 mb-4">Constitución Nacional - Art. 75 inc. 23</h4>
-        <p class="legal-text text-slate-300">"Corresponde al Congreso: Legislar y promover medidas de acción positiva que garanticen la igualdad real de oportunidades y de trato... en particular respecto de los niños, las mujeres, los ancianos y las personas con discapacidad."</p>
-    </div>
-    <div class="glass-panel p-6 rounded-2xl mb-4">
-        <h4 class="text-xl font-bold text-white border-l-4 border-cyan-500 pl-3 mb-4">Ley de Educación Nacional 26.206 - Art. 11 (inc. n)</h4>
-        <p class="legal-text text-slate-300">"Brindar a las personas con discapacidades, temporales o permanentes, una propuesta pedagógica que permita el máximo desarrollo de sus posibilidades, la integración y el pleno ejercicio de sus derechos."</p>
-    </div>
-`;
-
-// 3. JURISPRUDENCIA (Casos Reales de la CSJN extraídos del PDF)
 const CASOS_DB = [
     {
-        tema: "Derecho a la Educación e Inclusión Real",
-        conflicto: "Una institución educativa adopta conductas hostiles (negativa de documentación, trato diferenciado, comunicaciones a compañeros) hacia una menor con discapacidad, forzando un esquema expulsivo y no inclusivo.",
-        fallo: "La CSJN revocó la decisión que eximía al colegio. Concluyó que es imperativo garantizar medidas de apoyo en entornos que fomenten la plena inclusión, máxime al tratarse de un sujeto de 'múltiple vulnerabilidad' por su condición de niño y persona con discapacidad. (Fallos: 343:1805)"
+        eje: 1, tema: "Derecho a la Igualdad y No Discriminación",
+        conflicto: "Una institución educativa adopta conductas hostiles (trato diferenciado irrazonable, comunicaciones a compañeros) hacia una menor con discapacidad, forzando un esquema expulsivo.",
+        fallo: "La CSJN ordenó cesar las conductas discriminatorias. Afirmó que la Convención exige una protección especial (acción positiva) y medidas de apoyo personalizadas para lograr una INCLUSIÓN PLENA, desterrando el modelo segregador. (Fallos: 343:1805)"
     },
     {
-        tema: "Salud y Medidas de Acción Positiva (Cannabis)",
-        conflicto: "Una obra social y el Estado Provincial se niegan a cubrir íntegramente el costo del aceite de cannabis prescripto para tratar a un joven con epilepsia refractaria, alegando que no figura en protocolos estándar.",
-        fallo: "La Corte condenó a la obra social a brindar cobertura del 100%. Aplicando el Art. 75 inc. 23, dictaminó que se demostraron mejoras sustanciales en la calidad de vida y que el Estado debe garantizar 'acciones positivas' para proteger la salud de personas vulnerables. (Fallos: 344:2868)"
+        eje: 3, tema: "Acceso a la Justicia (Ajustes de Procedimiento)",
+        conflicto: "Una persona con discapacidad debe litigar a miles de kilómetros para reclamar una pensión, lo que configura una barrera física y económica insalvable.",
+        fallo: "La Corte declara inconstitucional la regla de competencia. El Estado debe realizar 'ajustes razonables' de procedimiento para garantizar la igualdad y remover las BARRERAS procesales (Art. 13 Convención). (Fallos: 344:1788)"
     },
     {
-        tema: "Acceso a la Justicia y Barreras Procesales",
-        conflicto: "Una hija incapacitada para el trabajo, que vive en Salta, inicia una demanda previsional, pero la ley procesal la obliga a litigar en la Cámara Federal de la Seguridad Social en Buenos Aires.",
-        fallo: "La Corte declara inconstitucional la regla de competencia territorial. Afirma que obligar a una persona vulnerable a litigar a miles de kilómetros viola la Convención (Art. 13), imponiendo una 'barrera procesal'. El Estado debe hacer 'ajustes de procedimiento'. (Fallos: 344:1788)"
+        eje: 7, tema: "Cobertura Educativa e Integración",
+        conflicto: "Una obra social se niega a cubrir la escolaridad y el acompañante terapéutico de un niño, exigiendo pruebas casi imposibles de conseguir por la familia.",
+        fallo: "La CSJN revocó el rechazo. Sostuvo que el Estado y las Obras Sociales no pueden imponer trabas burocráticas irrazonables para prestaciones educativas vitales. Rige el principio in dubio pro inclusión. (Fallos: 347:547)"
     }
 ];
 
-// 4. ESTATUTO DOCENTE (Ley 10.579 extraída del PDF)
 const ESTATUTO_DB = [
-    { art: "Art. 6 - Obligaciones", texto: "a) Desempeñar digna, eficaz y responsablemente las funciones inherentes al cargo. c) Formar a los alumnos en las normas éticas y sociales con absoluta prescindencia partidaria... en el respeto de la Constitución Nacional y Provincial." },
-    { art: "Art. 7 - Derechos del Titular", texto: "a) La estabilidad en el cargo, categoría, jerarquía y ubicación o destino. b) La percepción de una remuneración justa. j) El ejercicio de su actividad en las condiciones pedagógicas adecuadas." },
-    { art: "Art. 114 - Licencias", texto: "El personal docente tiene derecho a licencias por: a) Por enfermedad o accidente de trabajo. b) Por examen médico preventivo. d) Por maternidad o adopción." },
-    { art: "Art. 132 - Faltas y Sanciones", texto: "Las faltas graves serán sancionadas con: a) Postergación de ascenso. b) Traslado. c) Disminución de jerarquía. d) Cesantía. e) Exoneración." }
+    { eje: 7, art: "Art. 6 - Obligaciones", texto: "a) Desempeñar digna, eficaz y responsablemente las funciones... c) Formar a los alumnos en las normas éticas y sociales con absoluta prescindencia partidaria... respetando la Constitución Nacional y Provincial." },
+    { eje: 7, art: "Art. 7 - Derechos del Titular", texto: "a) La estabilidad en el cargo, categoría, jerarquía y ubicación o destino. b) La percepción de una remuneración justa." },
+    { eje: 7, art: "Art. 114 - Licencias", texto: "El personal docente tiene derecho a licencias por: a) Enfermedad o accidente de trabajo. b) Maternidad o adopción." }
 ];
 
-// 5. MÚLTIPLE CHOICE (Simulador de examen)
 const CHOICE_DB = [
     {
-        pregunta: "Bajo el paradigma actual (Convención Internacional), ¿cuál es el postulado principal del 'Modelo Social' de la Discapacidad?",
+        eje: 1,
+        pregunta: "¿Cuál es la diferencia fundamental entre el Modelo Médico y el Modelo Social de la discapacidad?",
         opciones: [
-            { texto: "La discapacidad es una enfermedad que requiere cura o normalización médica.", correcta: false },
-            { texto: "La discapacidad surge de la interacción entre las deficiencias de la persona y las BARRERAS del entorno que evitan su participación plena.", correcta: true },
-            { texto: "Las personas con discapacidad deben ser educadas únicamente en instituciones separadas (Escuelas Especiales aisladas).", correcta: false }
+            { texto: "El modelo médico busca adaptar el entorno, y el social busca curar a la persona.", correcta: false },
+            { texto: "El modelo médico ve a la discapacidad como una 'enfermedad' a curar o normalizar. El modelo social sostiene que la discapacidad surge por las BARRERAS (físicas/actitudinales) que la sociedad impone.", correcta: true },
+            { texto: "Ambos modelos sostienen que las personas con discapacidad deben asistir a escuelas segregadas.", correcta: false }
         ],
-        feedback: "¡Excelente! El Modelo Social (a diferencia del Modelo Médico rehabilitador) pone el foco en la sociedad: son las barreras (físicas, sociales, actitudinales) las que discapacitan, no el individuo."
+        feedback: "¡Exacto! El Modelo Social (incorporado en la Convención) quita el 'problema' de la persona y lo pone en la sociedad que no está adaptada."
     },
     {
-        pregunta: "Según la Reforma Constitucional de 1994, ¿cómo funciona el orden de prelación (jerarquía) de las leyes en Argentina?",
+        eje: 3,
+        pregunta: "Según la Ley 22.431 y la Constitución, ¿qué son las 'Medidas de Acción Positiva'?",
         opciones: [
-            { texto: "La Constitución Provincial está por encima de los Tratados Internacionales.", correcta: false },
-            { texto: "Constitución Nacional y Tratados de DDHH (Art. 75 inc 22) > Leyes Nacionales > Constituciones Provinciales.", correcta: true },
-            { texto: "Las resoluciones ministeriales tienen la misma jerarquía que la Constitución Nacional.", correcta: false }
+            { texto: "Son privilegios inconstitucionales que rompen la igualdad ante la ley.", correcta: false },
+            { texto: "Trato idéntico y matemático para todos los ciudadanos sin importar su condición.", correcta: false },
+            { texto: "Son acciones estatales para tratar de forma diferente a quienes están en desventaja (vulnerabilidad) para lograr una igualdad REAL de oportunidades.", correcta: true }
         ],
-        feedback: "Correcto. Como vimos en la clase, la pirámide jurídica tiene en su cúspide a la Constitución Nacional junto con los Tratados de Derechos Humanos con jerarquía constitucional."
+        feedback: "Correcto. El Art. 75 inc 23 de la CN ordena estas medidas para equilibrar la balanza a favor de personas con discapacidad, niños y ancianos."
+    },
+    {
+        eje: 7,
+        pregunta: "Bajo la Ley 10.579 (Estatuto Docente), la estabilidad en el cargo es un derecho de:",
+        opciones: [
+            { texto: "Todo el personal (titular, provisional y suplente).", correcta: false },
+            { texto: "Únicamente el personal docente Titular.", correcta: true },
+            { texto: "Los directivos exclusivamente.", correcta: false }
+        ],
+        feedback: "Perfecto. El Art. 7 inc 'a' garantiza la estabilidad exclusivamente al personal Titular."
     }
 ];
