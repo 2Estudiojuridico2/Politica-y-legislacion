@@ -6,73 +6,7 @@
     <title>LexDisca 3D - Plataforma Integral</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap');
-
-        :root {
-            --neon-cyan: #06b6d4;
-            --neon-violet: #8b5cf6;
-            --neon-emerald: #10b981;
-            --bg-dark: #020617;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            font-family: 'Outfit', sans-serif;
-            color: #f8fafc;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
-            background-attachment: fixed;
-        }
-
-        h1, h2, h3, .font-display { font-family: 'Space Grotesk', sans-serif; }
-        .legal-text { font-family: 'Lora', serif; line-height: 1.8; }
-
-        /* Glassmorphism & Glow */
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .glow-cyan:hover { box-shadow: 0 0 25px rgba(6, 182, 212, 0.4); border-color: rgba(6, 182, 212, 0.6); }
-        .glow-violet:hover { box-shadow: 0 0 25px rgba(139, 92, 246, 0.4); border-color: rgba(139, 92, 246, 0.6); }
-        .glow-emerald:hover { box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); border-color: rgba(16, 185, 129, 0.6); }
-
-        /* Timeline */
-        .timeline-line {
-            position: absolute; left: 50%; transform: translateX(-50%); width: 4px; height: 100%;
-            background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-violet), var(--neon-emerald)); opacity: 0.3; z-index: 0;
-        }
-        .timeline-node { position: relative; z-index: 10; transition: all 0.4s ease; cursor: pointer; }
-        .timeline-node:hover { transform: scale(1.03) translateY(-5px); }
-
-        /* Tarjetas 3D Jurisprudencia */
-        .flip-card { perspective: 1000px; height: 350px; cursor: pointer; }
-        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
-        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 1.5rem; padding: 2rem; overflow-y: auto;}
-        .flip-card-back { transform: rotateY(180deg); background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid var(--neon-violet); }
-
-        /* Modales y Transiciones */
-        .modal-backdrop { background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 50;}
-        .modal-backdrop.active { opacity: 1; pointer-events: auto; }
-        .modal-content { transform: scale(0.95) translateY(20px); opacity: 0; transition: all 0.4s ease; }
-        .modal-backdrop.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-        
-        .module-view { display: none; animation: fadeIn 0.5s ease forwards; }
-        .module-view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Scrollbars */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
-    </style>
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body class="antialiased pb-20">
 
@@ -111,35 +45,8 @@
             <div class="flex-1 overflow-hidden relative">
                 
                 <div id="view-menu" class="module-view active w-full h-full p-8 overflow-y-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <button onclick="openModule('leyes')" class="glass-panel p-8 rounded-3xl text-left glow-cyan transition-all group">
-                            <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6"><i class="fas fa-book-open text-2xl text-cyan-400"></i></div>
-                            <h3 class="text-xl font-bold text-white mb-2">Explorador Íntegro</h3>
-                            <p class="text-sm text-slate-400 font-light">Articulado de la Ley 26.206, 13.688 y Convención Internacional.</p>
-                        </button>
-                        <button onclick="openModule('casos')" class="glass-panel p-8 rounded-3xl text-left glow-violet transition-all group">
-                            <div class="w-14 h-14 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-6"><i class="fas fa-balance-scale text-2xl text-violet-400"></i></div>
-                            <h3 class="text-xl font-bold text-white mb-2">Laboratorio Casos</h3>
-                            <p class="text-sm text-slate-400 font-light">Análisis 3D de Fallos reales de la CSJN (Salud, Educación).</p>
-                        </button>
-                        <button onclick="openModule('estatuto')" class="glass-panel p-8 rounded-3xl text-left glow-emerald transition-all group">
-                            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6"><i class="fas fa-chalkboard-teacher text-2xl text-emerald-400"></i></div>
-                            <h3 class="text-xl font-bold text-white mb-2">Estatuto Docente</h3>
-                            <p class="text-sm text-slate-400 font-light">Buscador ágil de la Ley 10.579 (Derechos, Obligaciones).</p>
-                        </button>
-                        <button onclick="openModule('choice')" class="glass-panel p-8 rounded-3xl text-left glow-cyan transition-all group lg:col-span-2">
-                            <div class="flex items-center gap-6">
-                                <div class="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center shrink-0"><i class="fas fa-gamepad text-2xl text-orange-400"></i></div>
-                                <div><h3 class="text-xl font-bold text-white mb-1">Desafío Choice</h3><p class="text-sm text-slate-400 font-light">Simulador de examen promocional con feedback automático.</p></div>
-                            </div>
-                        </button>
-                        <button onclick="openModule('cine')" class="glass-panel p-8 rounded-3xl text-left glow-violet transition-all group">
-                            <div class="flex items-center gap-6">
-                                <div class="w-14 h-14 rounded-2xl bg-pink-500/10 flex items-center justify-center shrink-0"><i class="fas fa-film text-2xl text-pink-400"></i></div>
-                                <div><h3 class="text-xl font-bold text-white mb-1">Cine-Debate</h3><p class="text-sm text-slate-400 font-light">Cápsulas y análisis audiovisual.</p></div>
-                            </div>
-                        </button>
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="menu-buttons-container">
+                        </div>
                 </div>
 
                 <div id="view-leyes" class="module-view w-full h-full p-8 overflow-y-auto">
@@ -148,24 +55,22 @@
                 </div>
 
                 <div id="view-casos" class="module-view w-full h-full p-8 overflow-y-auto">
-                    <div class="mb-6 flex justify-between items-end">
-                        <div>
-                            <h3 class="text-2xl font-bold text-violet-400">Laboratorio de Jurisprudencia</h3>
-                            <p class="text-sm text-slate-400">Haz clic en las tarjetas para revelar la resolución de la Corte Suprema.</p>
-                        </div>
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-violet-400">Laboratorio de Jurisprudencia</h3>
+                        <p class="text-sm text-slate-400">Haz clic en las tarjetas para revelar la resolución de la CSJN.</p>
                     </div>
                     <div id="casos-content" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
                 </div>
 
                 <div id="view-estatuto" class="module-view w-full h-full p-8 overflow-y-auto">
                     <h3 class="text-2xl font-bold text-emerald-400 mb-4">Estatuto del Docente (Ley 10.579)</h3>
-                    <input type="text" id="search-estatuto" placeholder="Buscar artículo, obligación o derecho..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white mb-8 focus:border-emerald-500 focus:outline-none" onkeyup="filterEstatuto()">
+                    <input type="text" id="search-estatuto" placeholder="Buscar artículo..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white mb-8 focus:border-emerald-500 focus:outline-none" onkeyup="filterEstatuto()">
                     <div id="estatuto-content" class="space-y-4"></div>
                 </div>
 
                 <div id="view-choice" class="module-view w-full h-full p-8 overflow-y-auto">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-orange-400">Simulador de Examen</h3>
+                        <h3 class="text-2xl font-bold text-orange-400">Desafío de Nivel</h3>
                         <span id="score-display" class="bg-orange-500/20 text-orange-300 px-4 py-2 rounded-full font-bold">Puntaje: 0 / 0</span>
                     </div>
                     <div id="choice-content" class="space-y-8"></div>
@@ -180,220 +85,7 @@
         </div>
     </div>
 
-    <script>
-        // ---------------- DATOS (Basados en tus PDFs) ----------------
-        
-        const UNIDADES = [
-            { id: 1, numero: "01", titulo: "Fundamentos Jurídicos", desc: "Jerarquía Normativa y Derechos Humanos.", color: "cyan", icon: "fa-gavel" },
-            { id: 2, titulo: "Políticas Públicas y Leyes de Educación", desc: "Ley 26.206 y 13.688.", color: "violet", icon: "fa-graduation-cap" },
-            { id: 3, titulo: "Protección Integral y CSJN", desc: "Jurisprudencia, Ley 22.431 y Convención.", color: "emerald", icon: "fa-shield-alt" },
-            { id: 4, titulo: "Estatuto Docente (Ley 10.579)", desc: "Derechos, obligaciones y responsabilidades.", color: "cyan", icon: "fa-chalkboard-teacher" }
-        ];
-
-        // 1. Datos Explorador (Ejemplo Ley Educación) [cite: 1249, 1252]
-        const LEYES_DB = `
-            <div class="glass-panel p-6 rounded-2xl mb-4">
-                <h4 class="text-xl font-bold text-white border-l-4 border-cyan-500 pl-3 mb-4">Ley de Educación Nacional 26.206 - Art. 11 (inc. n)</h4>
-                <p class="legal-text text-slate-300">"Brindar a las personas con discapacidades, temporales o permanentes, una propuesta pedagógica que permita el máximo desarrollo de sus posibilidades, la integración y el pleno ejercicio de sus derechos."</p>
-            </div>
-            <div class="glass-panel p-6 rounded-2xl mb-4">
-                <h4 class="text-xl font-bold text-white border-l-4 border-cyan-500 pl-3 mb-4">Ley de Educación Provincial 13.688 - Art. 39</h4>
-                <p class="legal-text text-slate-300">"La Educación Especial es la modalidad del Sistema Educativo Provincial responsable de garantizar el derecho a la educación de los alumnos con discapacidades, temporales o permanentes."</p>
-            </div>
-        `;
-
-        // 2. Datos Jurisprudencia (Corte Suprema) [cite: 193, 255]
-        const CASOS_DB = [
-            {
-                tema: "Derecho a la Educación e Inclusión",
-                conflicto: "Una institución educativa adopta conductas hostiles (negativa de documentación, trato diferenciado) hacia una menor con discapacidad, forzando un esquema expulsivo.",
-                fallo: "La CSJN revocó la decisión que eximía al colegio. Concluyó que es imperativo garantizar medidas de apoyo en entornos que fomenten la plena inclusión, máxime al tratarse de múltiple vulnerabilidad (niño + discapacidad). (Fallos: 343:1805)"
-            },
-            {
-                tema: "Ajustes de Procedimiento (Acceso a la Justicia)",
-                conflicto: "Una persona con discapacidad se ve obligada a litigar en tribunales a cientos de kilómetros de su residencia para reclamar una pensión.",
-                fallo: "La Corte declara inconstitucional la competencia restrictiva. Según el Art. 13 de la Convención, el Estado debe realizar 'ajustes de procedimiento' para asegurar la igualdad procesal y compensar asimetrías. (Fallos: 344:1788)"
-            }
-        ];
-
-        // 3. Datos Estatuto Docente (Ley 10.579) [cite: 875, 890]
-        const ESTATUTO_DB = [
-            { art: "Art. 6 - Obligaciones", texto: "a) Desempeñar digna, eficaz y responsablemente las funciones inherentes al cargo. c) Formar a los alumnos en las normas éticas y sociales con absoluta prescindencia partidaria... en el respeto de la Constitución Nacional y Provincial." },
-            { art: "Art. 7 - Derechos", texto: "a) La estabilidad en el cargo, categoría, jerarquía y ubicación o destino. b) La percepción de una remuneración justa. j) El ejercicio de su actividad en las condiciones pedagógicas adecuadas." },
-            { art: "Art. 114 - Licencias", texto: "El personal docente tiene derecho a licencias por: a) Por enfermedad o accidente de trabajo. b) Por examen médico preventivo. d) Por maternidad o adopción." }
-        ];
-
-        // 4. Datos Múltiple Choice (Basado en Plan de Estudios y Prelación) 
-        const CHOICE_DB = [
-            {
-                pregunta: "Según la Reforma Constitucional de 1994, ¿cuál es el orden de prelación correcto de las leyes?",
-                opciones: [
-                    { texto: "1° Leyes Provinciales, 2° Tratados Internacionales, 3° Constitución.", correcta: false },
-                    { texto: "1° Constitución Nacional y Tratados de DDHH (Art. 75 inc 22), 2° Leyes Nacionales, 3° Constituciones Provinciales.", correcta: true },
-                    { texto: "Las leyes de educación provincial priman sobre los tratados internacionales.", correcta: false }
-                ],
-                feedback: "¡Exacto! El Art. 75 inc 22 otorgó jerarquía constitucional a tratados como la Convención de los Derechos del Niño, equiparándolos a la Constitución misma."
-            },
-            {
-                pregunta: "Bajo la Ley 10.579 (Estatuto Docente), la estabilidad en el cargo es un derecho exclusivo de:",
-                opciones: [
-                    { texto: "El personal docente suplente.", correcta: false },
-                    { texto: "El personal docente titular (mientras conserve su eficiencia y aptitud).", correcta: true },
-                    { texto: "Todo el personal (titular, provisional y suplente) por igual.", correcta: false }
-                ],
-                feedback: "Correcto. El Art. 7 inciso 'a' garantiza la estabilidad al personal TITULAR."
-            }
-        ];
-
-        // ---------------- LÓGICA DE LA INTERFAZ ----------------
-
-        // Renderizar Roadmap inicial
-        function renderRoadmap() {
-            const container = document.getElementById('roadmap-container');
-            container.innerHTML = UNIDADES.map((u, i) => {
-                const isEven = i % 2 !== 0;
-                return `
-                <div class="timeline-node flex flex-col ${isEven ? 'md:flex-row-reverse' : 'md:flex-row'} items-center md:items-stretch w-full" onclick="openUnit(${u.id})">
-                    <div class="w-full md:w-5/12 glass-panel p-8 rounded-[2rem] glow-${u.color} ${isEven ? 'md:text-right' : 'md:text-left'} group">
-                        <span class="text-${u.color}-400 font-bold tracking-widest text-xs uppercase mb-2 block">Unidad ${u.numero || u.id}</span>
-                        <h2 class="text-2xl font-display font-bold text-white mb-2">${u.titulo}</h2>
-                        <p class="text-slate-400 font-light">${u.desc}</p>
-                    </div>
-                    <div class="w-full md:w-2/12 flex justify-center items-center py-6 md:py-0 z-20">
-                        <div class="w-14 h-14 rounded-full glass-panel border border-${u.color}-500/50 flex items-center justify-center">
-                            <i class="fas ${u.icon} text-xl text-${u.color}-400"></i>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-5/12"></div>
-                </div>`;
-            }).join('');
-        }
-
-        // Navegación Modal
-        function openUnit(id) {
-            const u = UNIDADES.find(x => x.id === id);
-            document.getElementById('modal-unit-number').innerText = `Unidad ${u.numero || u.id}`;
-            document.getElementById('modal-unit-title').innerText = u.titulo;
-            document.getElementById('unit-modal').classList.add('active');
-            showMenu(); // Siempre abrir en el menú
-        }
-
-        function closeModal() { document.getElementById('unit-modal').classList.remove('active'); }
-        
-        function showMenu() {
-            document.querySelectorAll('.module-view').forEach(el => el.classList.remove('active'));
-            document.getElementById('view-menu').classList.add('active');
-            document.getElementById('btn-back').classList.add('hidden');
-        }
-
-        function openModule(moduleName) {
-            document.querySelectorAll('.module-view').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${moduleName}`).classList.add('active');
-            document.getElementById('btn-back').classList.remove('hidden');
-            
-            // Cargar datos (Lazy Load simulación)
-            if(moduleName === 'leyes') document.getElementById('leyes-content').innerHTML = LEYES_DB;
-            if(moduleName === 'casos') renderCasos();
-            if(moduleName === 'estatuto') renderEstatuto(ESTATUTO_DB);
-            if(moduleName === 'choice') renderChoice();
-            if(moduleName === 'cine') renderCine();
-        }
-
-        // Renderizadores Específicos
-        function renderCasos() {
-            document.getElementById('casos-content').innerHTML = CASOS_DB.map(c => `
-                <div class="flip-card" onclick="this.classList.toggle('flipped')">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front glass-panel flex flex-col justify-center">
-                            <div class="text-violet-400 mb-4"><i class="fas fa-gavel text-3xl"></i></div>
-                            <h4 class="text-lg font-bold text-white mb-2">${c.tema}</h4>
-                            <p class="text-slate-300 text-sm">${c.conflicto}</p>
-                            <p class="text-xs text-violet-400 font-bold mt-4 mt-auto uppercase tracking-widest"><i class="fas fa-sync-alt mr-2"></i> Clic para ver Fallo CSJN</p>
-                        </div>
-                        <div class="flip-card-back flex flex-col justify-center">
-                            <h4 class="text-lg font-bold text-white mb-2">Resolución CSJN</h4>
-                            <p class="text-slate-200 text-sm italic">"${c.fallo}"</p>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderEstatuto(data) {
-            document.getElementById('estatuto-content').innerHTML = data.map(item => `
-                <div class="glass-panel p-6 rounded-2xl border-l-4 border-emerald-500">
-                    <h4 class="font-bold text-white mb-2">${item.art}</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed">${item.texto}</p>
-                </div>
-            `).join('');
-        }
-
-        function filterEstatuto() {
-            const term = document.getElementById('search-estatuto').value.toLowerCase();
-            const filtered = ESTATUTO_DB.filter(x => x.art.toLowerCase().includes(term) || x.texto.toLowerCase().includes(term));
-            renderEstatuto(filtered);
-        }
-
-        function renderChoice() {
-            window.currentScore = 0;
-            document.getElementById('score-display').innerText = `Puntaje: 0 / ${CHOICE_DB.length}`;
-            
-            document.getElementById('choice-content').innerHTML = CHOICE_DB.map((q, qIndex) => `
-                <div class="glass-panel p-8 rounded-3xl" id="q-container-${qIndex}">
-                    <h4 class="text-xl font-bold text-white mb-6">${qIndex + 1}. ${q.pregunta}</h4>
-                    <div class="space-y-3">
-                        ${q.opciones.map((opt, oIndex) => `
-                            <button onclick="checkAnswer(${qIndex}, ${opt.correcta}, this, '${q.feedback}')" class="w-full text-left p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:bg-slate-700 transition text-slate-200 opt-btn-${qIndex}">
-                                ${opt.texto}
-                            </button>
-                        `).join('')}
-                    </div>
-                    <div id="feedback-${qIndex}" class="mt-4 p-4 rounded-xl hidden text-sm font-bold"></div>
-                </div>
-            `).join('');
-        }
-
-        function checkAnswer(qIndex, isCorrect, btn, feedback) {
-            // Deshabilitar botones de esta pregunta
-            document.querySelectorAll(`.opt-btn-${qIndex}`).forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
-            
-            const feedbackEl = document.getElementById(`feedback-${qIndex}`);
-            feedbackEl.classList.remove('hidden');
-
-            if(isCorrect) {
-                btn.classList.remove('bg-slate-800/50', 'border-slate-700');
-                btn.classList.add('bg-emerald-900', 'border-emerald-500', 'text-emerald-100', 'opacity-100');
-                feedbackEl.classList.add('bg-emerald-500/20', 'text-emerald-300');
-                feedbackEl.innerHTML = `<i class="fas fa-check-circle mr-2"></i> ${feedback}`;
-                window.currentScore++;
-                document.getElementById('score-display').innerText = `Puntaje: ${window.currentScore} / ${CHOICE_DB.length}`;
-            } else {
-                btn.classList.remove('bg-slate-800/50', 'border-slate-700');
-                btn.classList.add('bg-red-900', 'border-red-500', 'text-red-100', 'opacity-100');
-                feedbackEl.classList.add('bg-red-500/20', 'text-red-300');
-                feedbackEl.innerHTML = `<i class="fas fa-times-circle mr-2"></i> Incorrecto. ${feedback}`;
-            }
-        }
-
-        function renderCine() {
-            document.getElementById('cine-content').innerHTML = `
-                <div class="glass-panel p-4 rounded-3xl overflow-hidden">
-                    <div class="relative w-full rounded-2xl overflow-hidden" style="padding-top: 56.25%;">
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/VLH8eQejT5o" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                    <div class="p-4 text-center"><p class="text-pink-400 font-bold">Cápsula: Derechos (Short)</p></div>
-                </div>
-                <div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center border-dashed border-2 border-pink-500/30">
-                    <i class="fas fa-film text-4xl text-pink-500/50 mb-4"></i>
-                    <h4 class="font-bold text-white mb-2">Foro: "Mar Adentro"</h4>
-                    <p class="text-sm text-slate-400 mb-4">Análisis del modelo médico vs. social en base a la película. Prepara tus argumentos basados en el Art. 19 de la CN.</p>
-                    <button class="px-6 py-2 bg-pink-600 hover:bg-pink-500 rounded-full text-white text-sm font-bold transition">Abrir Foro</button>
-                </div>
-            `;
-        }
-
-        // Init
-        document.addEventListener('DOMContentLoaded', renderRoadmap);
-    </script>
+    <script src="js/datos.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
