@@ -1,82 +1,18 @@
-let currentUnitId = null;
-
-// Función para abrir la unidad y guardar el estado
-function openUnit(id) {
-    currentUnitId = Number(id); // Normalización de ID
-    const unidad = UNIDADES.find(u => u.id === currentUnitId);
-    
-    if(!unidad) return;
-
-    document.getElementById('modal-unit-title').innerText = unidad.titulo;
-    document.getElementById('modal-unit-number').innerText = `Unidad ${unidad.numero}`;
-    
-    // Abrir modal
-    document.getElementById('unit-modal').classList.add('active');
-    showMenu(); // Volver al menú principal del modal
-}
-
-function renderCasos() {
-    const container = document.getElementById('casos-content');
-    // FILTRO REAL: Solo los casos donde el eje coincida con la unidad abierta
-    const filtrados = CASOS_DB.filter(c => c.eje === currentUnitId);
-    
-    if(filtrados.length === 0) {
-        container.innerHTML = `<p class="text-slate-500 italic">No hay casos cargados para esta unidad.</p>`;
-        return;
-    }
-
-    container.innerHTML = filtrados.map(c => `
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner">
-                <div class="flip-card-front glass-panel">
-                    <h4 class="text-violet-400 font-bold">${c.tema}</h4>
-                    <p class="text-sm text-slate-300 mt-2">${c.conflicto}</p>
-                </div>
-                <div class="flip-card-back">
-                    <p class="text-sm">${c.fallo}</p>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-function renderLeyes() {
-    const container = document.getElementById('leyes-content');
-    const filtradas = LEYES_DB.filter(l => l.eje === currentUnitId);
-    
-    container.innerHTML = filtradas.length > 0 
-        ? filtradas.map(l => `<div class="glass-panel p-4 mb-3"><h5 class="text-cyan-400 font-bold">${l.titulo}</h5><p class="text-slate-300 text-sm">${l.texto}</p></div>`).join('')
-        : `<p class="text-slate-500 italic">Sin leyes asignadas a este eje.</p>`;
-}
-
-// Función para volver al menú de botones dentro del modal
-function showMenu() {
-    document.querySelectorAll('.module-view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-menu').classList.add('active');
-}
-
-// Función para abrir un módulo específico (Leyes, Casos, etc.)
-function openModule(module) {
-    document.querySelectorAll('.module-view').forEach(v => v.classList.remove('active'));
-    document.getElementById(`view-${module}`).classList.add('active');
-    
-    // Disparar el renderizado correspondiente
-    if(module === 'casos') renderCasos();
-    if(module === 'leyes') renderLeyes();
-}
-
 // ==========================================
-// MOTOR LÓGICO FILTRADO (SPA)
+// MOTOR LÓGICO FILTRADO (SPA) - LEXDISCA 3D
+// Archivo: js/app.js
 // ==========================================
 
+// Variables de estado global
 let currentUnitId = null;
 let currentScore = 0;
 
+// Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     renderRoadmap();
-    generateMenuButtons();
 });
 
+// 1. RENDERIZAR EL MAPA PRINCIPAL
 function renderRoadmap() {
     const container = document.getElementById('roadmap-container');
     container.innerHTML = UNIDADES.map((u, i) => {
@@ -89,7 +25,7 @@ function renderRoadmap() {
                 <p class="text-slate-400 font-light">${u.desc}</p>
             </div>
             <div class="w-full md:w-2/12 flex justify-center items-center py-6 md:py-0 z-20">
-                <div class="w-14 h-14 rounded-full glass-panel border border-${u.color}-500/50 flex items-center justify-center">
+                <div class="w-14 h-14 rounded-full glass-panel border border-${u.color}-500/50 flex items-center justify-center bg-slate-900">
                     <i class="fas ${u.icon} text-xl text-${u.color}-400"></i>
                 </div>
             </div>
@@ -98,11 +34,18 @@ function renderRoadmap() {
     }).join('');
 }
 
+// 2. CONTROL DEL MODAL (Apertura de Unidad)
 function openUnit(id) {
-    currentUnitId = id; // AQUÍ GUARDAMOS EL EJE ACTUAL
-    const u = UNIDADES.find(x => x.id === id);
-    document.getElementById('modal-unit-number').innerText = `Unidad ${u.numero}`;
-    document.getElementById('modal-unit-title').innerText = u.titulo;
+    currentUnitId = Number(id); // Normalizamos el ID para evitar errores de tipo
+    const unidad = UNIDADES.find(x => x.id === currentUnitId);
+    
+    if(!unidad) return; // Seguridad por si no encuentra la unidad
+
+    // Actualizamos los títulos del modal
+    document.getElementById('modal-unit-number').innerText = `Unidad ${unidad.numero}`;
+    document.getElementById('modal-unit-title').innerText = unidad.titulo;
+    
+    generateMenuButtons();
     document.getElementById('unit-modal').classList.add('active');
     showMenu(); 
 }
@@ -111,33 +54,49 @@ function closeModal() {
     document.getElementById('unit-modal').classList.remove('active'); 
 }
 
+// 3. GENERADOR DEL MENÚ DINÁMICO
 function generateMenuButtons() {
     const menuContainer = document.getElementById('menu-buttons-container');
-    menuContainer.innerHTML = `
+    let html = `
         <button onclick="openModule('leyes')" class="glass-panel p-8 rounded-3xl text-left glow-cyan transition-all group">
             <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6"><i class="fas fa-book-open text-2xl text-cyan-400"></i></div>
             <h3 class="text-xl font-bold text-white mb-2">Explorador Íntegro</h3>
-            <p class="text-sm text-slate-400 font-light">Normativas y Tratados de esta Unidad.</p>
+            <p class="text-sm text-slate-400 font-light">Leyes y Tratados de esta Unidad.</p>
         </button>
         <button onclick="openModule('casos')" class="glass-panel p-8 rounded-3xl text-left glow-violet transition-all group">
             <div class="w-14 h-14 rounded-2xl bg-violet-500/10 flex items-center justify-center mb-6"><i class="fas fa-balance-scale text-2xl text-violet-400"></i></div>
             <h3 class="text-xl font-bold text-white mb-2">Laboratorio Casos</h3>
-            <p class="text-sm text-slate-400 font-light">Jurisprudencia de la CSJN aplicada a esta Unidad.</p>
-        </button>
+            <p class="text-sm text-slate-400 font-light">Jurisprudencia de la CSJN de esta Unidad.</p>
+        </button>`;
+    
+    // El Estatuto Docente tiene sentido pedagógico en la Unidad 7 (según tu plan)
+    if (currentUnitId === 7) {
+        html += `
         <button onclick="openModule('estatuto')" class="glass-panel p-8 rounded-3xl text-left glow-emerald transition-all group">
             <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6"><i class="fas fa-chalkboard-teacher text-2xl text-emerald-400"></i></div>
             <h3 class="text-xl font-bold text-white mb-2">Estatuto Docente</h3>
-            <p class="text-sm text-slate-400 font-light">Artículos de la Ley 10.579 vinculados.</p>
-        </button>
-        <button onclick="openModule('choice')" class="glass-panel p-8 rounded-3xl text-left glow-cyan transition-all group lg:col-span-2">
+            <p class="text-sm text-slate-400 font-light">Buscador filtrado de la Ley 10.579.</p>
+        </button>`;
+    }
+
+    html += `
+        <button onclick="openModule('choice')" class="glass-panel p-8 rounded-3xl text-left glow-cyan transition-all group ${currentUnitId === 7 ? 'lg:col-span-2' : 'md:col-span-2'}">
             <div class="flex items-center gap-6">
                 <div class="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center shrink-0"><i class="fas fa-gamepad text-2xl text-orange-400"></i></div>
-                <div><h3 class="text-xl font-bold text-white mb-1">Desafío Choice</h3><p class="text-sm text-slate-400 font-light">Evaluación específica de esta Unidad.</p></div>
+                <div><h3 class="text-xl font-bold text-white mb-1">Desafío Choice</h3><p class="text-sm text-slate-400 font-light">Simulador de examen de la Unidad.</p></div>
+            </div>
+        </button>
+        <button onclick="openModule('cine')" class="glass-panel p-8 rounded-3xl text-left glow-violet transition-all group">
+            <div class="flex items-center gap-6">
+                <div class="w-14 h-14 rounded-2xl bg-pink-500/10 flex items-center justify-center shrink-0"><i class="fas fa-film text-2xl text-pink-400"></i></div>
+                <div><h3 class="text-xl font-bold text-white mb-1">Cine-Debate</h3><p class="text-sm text-slate-400 font-light">Análisis audiovisual.</p></div>
             </div>
         </button>
     `;
+    menuContainer.innerHTML = html;
 }
 
+// 4. NAVEGACIÓN INTERNA (VISTAS)
 function showMenu() {
     document.querySelectorAll('.module-view').forEach(el => el.classList.remove('active'));
     document.getElementById('view-menu').classList.add('active');
@@ -149,18 +108,16 @@ function openModule(moduleName) {
     document.getElementById(`view-${moduleName}`).classList.add('active');
     document.getElementById('btn-back').classList.remove('hidden');
     
-    // RUTAS DE RENDERIZADO FILTRADO
+    // Disparador del renderizado correspondiente
     if(moduleName === 'leyes') renderLeyes();
     if(moduleName === 'casos') renderCasos();
-    if(moduleName === 'estatuto') {
-        document.getElementById('search-estatuto').value = ""; // Limpiar buscador
-        filterEstatuto(); // Renderizar por defecto
-    }
+    if(moduleName === 'estatuto') { document.getElementById('search-estatuto').value = ""; filterEstatuto(); }
     if(moduleName === 'choice') renderChoice();
+    if(moduleName === 'cine') renderCine();
 }
 
 // ==========================================
-// RENDERIZADORES CON FILTRO POR UNIDAD
+// 5. RENDERIZADORES (CON FILTROS ESTRICTOS)
 // ==========================================
 
 function renderLeyes() {
@@ -173,8 +130,8 @@ function renderLeyes() {
     }
 
     container.innerHTML = dataFiltrada.map(item => `
-        <div class="glass-panel p-6 rounded-2xl mb-4">
-            <h4 class="text-xl font-bold text-white border-l-4 border-cyan-500 pl-3 mb-4">${item.titulo}</h4>
+        <div class="glass-panel p-6 rounded-2xl mb-4 border-l-4 border-cyan-500">
+            <h4 class="text-xl font-bold text-white mb-4">${item.titulo}</h4>
             <p class="legal-text text-slate-300">"${item.texto}"</p>
         </div>
     `).join('');
@@ -209,7 +166,8 @@ function renderCasos() {
 
 function filterEstatuto() {
     const term = document.getElementById('search-estatuto').value.toLowerCase();
-    // Filtramos primero por Unidad, y luego por la búsqueda de texto
+    
+    // Doble filtro: Por Eje y por término de búsqueda
     const dataFiltrada = ESTATUTO_DB
         .filter(item => item.eje === currentUnitId)
         .filter(item => item.art.toLowerCase().includes(term) || item.texto.toLowerCase().includes(term));
@@ -217,7 +175,7 @@ function filterEstatuto() {
     const container = document.getElementById('estatuto-content');
 
     if (dataFiltrada.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 italic">No hay artículos del Estatuto para esta unidad o búsqueda.</p>`;
+        container.innerHTML = `<p class="text-slate-400 italic">No hay artículos cargados para esta unidad o término de búsqueda.</p>`;
         return;
     }
 
@@ -242,7 +200,6 @@ function renderChoice() {
 
     document.getElementById('score-display').innerText = `Puntaje: 0 / ${dataFiltrada.length}`;
     
-    // Pasamos el ID real de la pregunta en la base de datos (q.id) pero aquí usamos un index local
     container.innerHTML = dataFiltrada.map((q, localIndex) => `
         <div class="glass-panel p-8 rounded-3xl">
             <h4 class="text-xl font-bold text-white mb-6">${localIndex + 1}. ${q.pregunta}</h4>
@@ -259,7 +216,8 @@ function renderChoice() {
 }
 
 function checkAnswer(localIndex, isCorrect, btn, feedback, totalQuestions) {
-    document.querySelectorAll(`.opt-btn-${localIndex}`).forEach(b => { b.disabled = true; b.classList.add('opacity-50'); });
+    // Bloquear botones después de responder
+    document.querySelectorAll(`.opt-btn-${localIndex}`).forEach(b => { b.disabled = true; b.classList.add('opacity-50', 'cursor-not-allowed'); });
     const feedbackEl = document.getElementById(`feedback-${localIndex}`);
     feedbackEl.classList.remove('hidden');
 
@@ -279,4 +237,35 @@ function checkAnswer(localIndex, isCorrect, btn, feedback, totalQuestions) {
     }
     
     document.getElementById('score-display').innerText = `Puntaje: ${currentScore} / ${totalQuestions}`;
+}
+
+function renderCine() {
+    // Filtramos si hay material de cine para esta unidad (aunque por ahora dejamos un fallback)
+    let dataFiltrada = [];
+    if(typeof CINE_DB !== 'undefined') {
+        dataFiltrada = CINE_DB.filter(c => c.eje === currentUnitId);
+    }
+    
+    const container = document.getElementById('cine-content');
+
+    if (dataFiltrada.length === 0) {
+        // Fallback genérico si no hay nada en la base de datos para esta unidad
+        container.innerHTML = `
+            <div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center border-dashed border-2 border-pink-500/30 lg:col-span-2">
+                <i class="fas fa-film text-4xl text-pink-500/50 mb-4"></i>
+                <h4 class="font-bold text-white mb-2">Sin material audiovisual asignado</h4>
+                <p class="text-sm text-slate-400">Aún no se ha cargado una película o cápsula para la Unidad ${currentUnitId}.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = dataFiltrada.map(c => `
+        <div class="glass-panel p-4 rounded-3xl overflow-hidden">
+            <div class="relative w-full rounded-2xl overflow-hidden" style="padding-top: 56.25%;">
+                <iframe class="absolute top-0 left-0 w-full h-full" src="${c.url}" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="p-4 text-center"><p class="text-pink-400 font-bold">${c.titulo}</p></div>
+        </div>
+    `).join('');
 }
