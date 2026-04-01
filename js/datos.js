@@ -1,3 +1,26 @@
+// La base de datos debe ser GLOBAL (const o var fuera de funciones)
+const UNIDADES = [
+    { id: 1, numero: "01", titulo: "Fundamentos y Modelos", desc: "Modelo Médico vs. Social.", color: "cyan", icon: "fa-gavel" },
+    { id: 2, numero: "02", titulo: "Políticas Públicas", desc: "Derechos DESC y población.", color: "violet", icon: "fa-users" },
+    { id: 3, numero: "03", titulo: "Protección Integral", desc: "Constitución y Ley 22.431.", color: "emerald", icon: "fa-shield-alt" },
+    { id: 4, numero: "04", titulo: "Memoria y Prestaciones", desc: "Ley 24.901.", color: "cyan", icon: "fa-landmark" },
+    { id: 5, numero: "05", titulo: "Salud y Autonomía", desc: "Salud Mental y Epilepsia.", color: "violet", icon: "fa-heartbeat" },
+    { id: 6, numero: "06", titulo: "Empleo y Riesgos", desc: "Ley de Riesgos del Trabajo.", color: "emerald", icon: "fa-briefcase" },
+    { id: 7, numero: "07", titulo: "Rol Docente", desc: "Ley 10.579 y Educación.", color: "cyan", icon: "fa-chalkboard-teacher" }
+];
+
+const CASOS_DB = [
+    { eje: 1, tema: "Discriminación", conflicto: "Conductas hostiles en escuela.", fallo: "Fallo 343:1805 CSJN." },
+    { eje: 3, tema: "Ajustes de Procedimiento", conflicto: "Barreras físicas/procesales.", fallo: "Fallo 344:1788 CSJN." },
+    { eje: 7, tema: "Cobertura Educativa", conflicto: "Rechazo de acompañante terapéutico.", fallo: "Fallo 347:547 CSJN." }
+];
+
+// Importante: LEYES_DB ahora es un Array de Objetos, no un String
+const LEYES_DB = [
+    { eje: 1, titulo: "CN Art. 75 inc. 23", texto: "Medidas de acción positiva para PCD." },
+    { eje: 7, titulo: "Ley 13.688 Art. 39", texto: "Responsabilidad de la Ed. Especial." }
+];
+
 // ==========================================
 // BASE DE DATOS RELACIONAL - LEXDISCA 3D
 // ==========================================
