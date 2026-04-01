@@ -1,3 +1,70 @@
+let currentUnitId = null;
+
+// Función para abrir la unidad y guardar el estado
+function openUnit(id) {
+    currentUnitId = Number(id); // Normalización de ID
+    const unidad = UNIDADES.find(u => u.id === currentUnitId);
+    
+    if(!unidad) return;
+
+    document.getElementById('modal-unit-title').innerText = unidad.titulo;
+    document.getElementById('modal-unit-number').innerText = `Unidad ${unidad.numero}`;
+    
+    // Abrir modal
+    document.getElementById('unit-modal').classList.add('active');
+    showMenu(); // Volver al menú principal del modal
+}
+
+function renderCasos() {
+    const container = document.getElementById('casos-content');
+    // FILTRO REAL: Solo los casos donde el eje coincida con la unidad abierta
+    const filtrados = CASOS_DB.filter(c => c.eje === currentUnitId);
+    
+    if(filtrados.length === 0) {
+        container.innerHTML = `<p class="text-slate-500 italic">No hay casos cargados para esta unidad.</p>`;
+        return;
+    }
+
+    container.innerHTML = filtrados.map(c => `
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front glass-panel">
+                    <h4 class="text-violet-400 font-bold">${c.tema}</h4>
+                    <p class="text-sm text-slate-300 mt-2">${c.conflicto}</p>
+                </div>
+                <div class="flip-card-back">
+                    <p class="text-sm">${c.fallo}</p>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderLeyes() {
+    const container = document.getElementById('leyes-content');
+    const filtradas = LEYES_DB.filter(l => l.eje === currentUnitId);
+    
+    container.innerHTML = filtradas.length > 0 
+        ? filtradas.map(l => `<div class="glass-panel p-4 mb-3"><h5 class="text-cyan-400 font-bold">${l.titulo}</h5><p class="text-slate-300 text-sm">${l.texto}</p></div>`).join('')
+        : `<p class="text-slate-500 italic">Sin leyes asignadas a este eje.</p>`;
+}
+
+// Función para volver al menú de botones dentro del modal
+function showMenu() {
+    document.querySelectorAll('.module-view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-menu').classList.add('active');
+}
+
+// Función para abrir un módulo específico (Leyes, Casos, etc.)
+function openModule(module) {
+    document.querySelectorAll('.module-view').forEach(v => v.classList.remove('active'));
+    document.getElementById(`view-${module}`).classList.add('active');
+    
+    // Disparar el renderizado correspondiente
+    if(module === 'casos') renderCasos();
+    if(module === 'leyes') renderLeyes();
+}
+
 // ==========================================
 // MOTOR LÓGICO FILTRADO (SPA)
 // ==========================================
