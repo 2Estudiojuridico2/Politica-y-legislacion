@@ -18,6 +18,7 @@ const TEORIA_DB = [
         titulo: "El Modelo Médico o Rehabilitador",
         subtitulo: "Enfoque en el Déficit y la Normalización",
         cuerpo: "Este modelo entiende la discapacidad como una desviación de la 'normalidad'. El foco está en la patología. Según los autores: 'Este se centra en el déficit, y pone el énfasis en una comprensión causal de los trastornos y en el sentido de un curso crónico' (Cazorla Palomo & Parra Ramajo, 2017, p. 47). El objetivo aquí es 'curar' o 'normalizar' al sujeto para que encaje en la sociedad.",
+        imagenUrl: "js/img/analogia.png",
         cita: "Cazorla Palomo, J. y Parra Ramajo, B. (2017). Alternativas. Cuadernos de Trabajo Social, 24, 43-54."
     },
     {
