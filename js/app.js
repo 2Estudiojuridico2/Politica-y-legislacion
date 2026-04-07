@@ -121,24 +121,35 @@ function openModule(moduleName) {
 
 // 5. RENDERIZADORES
 function renderTeoria() {
-    const dataFiltrada = TEORIA_DB.filter(t => t.eje === currentUnitId);
     const container = document.getElementById('teoria-content');
+    if(!container) return;
+
+    const dataFiltrada = TEORIA_DB.filter(t => t.eje === currentUnitId);
     
     if (dataFiltrada.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 italic">No hay material teórico cargado para esta unidad.</p>`;
+        container.innerHTML = `<p class="text-slate-400 italic">No hay fundamentos teóricos cargados.</p>`;
         return;
     }
 
-    container.innerHTML = dataFiltrada.map(t => `
+    container.innerHTML = dataFiltrada.map(t => {
+        // Esta pequeña trampa revisa si le pusiste una foto o no
+        let imagenHtml = "";
+        if (t.imagenUrl) {
+            imagenHtml = `<div class="mt-6 mb-6 rounded-2xl overflow-hidden border-2 border-slate-700 p-2 bg-slate-900"><img src="${t.imagenUrl}" class="w-full h-auto rounded-xl"></div>`;
+        }
+
+        // Dibuja la tarjeta completa
+        return `
         <div class="glass-panel p-8 rounded-3xl mb-6 border-l-4 border-emerald-500 shadow-2xl">
-            <span class="text-emerald-400 text-xs font-bold uppercase tracking-widest">${t.subtitulo}</span>
+            <span class="text-emerald-400 text-xs font-bold uppercase">${t.subtitulo}</span>
             <h4 class="text-2xl font-bold text-white mt-2 mb-4">${t.titulo}</h4>
-            <p class="text-slate-200 leading-relaxed text-lg mb-6">"${t.cuerpo}"</p>
-            <div class="pt-4 border-t border-slate-700/50 text-xs text-slate-500 italic">
-                Bibliografía: ${t.cita}
+            <p class="text-slate-200 text-lg mb-6">"${t.cuerpo}"</p>
+            
+            ${imagenHtml} <div class="pt-4 border-t border-slate-700/50">
+                <p class="text-xs text-slate-500 italic">Fuente: ${t.cita}</p>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 function renderLeyes() {
