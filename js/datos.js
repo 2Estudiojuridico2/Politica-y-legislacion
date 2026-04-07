@@ -12,7 +12,29 @@ const UNIDADES = [
     { id: 6, numero: "06", titulo: "Empleo y Riesgos Laborales", desc: "Ley de Empleo 24.013 (Ley Bases), Riesgos del Trabajo 24.557 y Talleres Protegidos.", color: "emerald", icon: "fa-briefcase" },
     { id: 7, numero: "07", titulo: "El Rol Docente en el Marco Legal", desc: "Leyes de Educación 26.206 y 13.688. Estatuto Docente (Ley 10.579). Ética profesional.", color: "cyan", icon: "fa-chalkboard-teacher" }
 ];
-
+const TEORIA_DB = [
+    {
+        eje: 1,
+        titulo: "El Modelo Médico o Rehabilitador",
+        subtitulo: "Enfoque en el Déficit y la Normalización",
+        cuerpo: "Este modelo entiende la discapacidad como una desviación de la 'normalidad'. El foco está en la patología. Según los autores: 'Este se centra en el déficit, y pone el énfasis en una comprensión causal de los trastornos y en el sentido de un curso crónico' (Cazorla Palomo & Parra Ramajo, 2017, p. 47). El objetivo aquí es 'curar' o 'normalizar' al sujeto para que encaje en la sociedad.",
+        cita: "Cazorla Palomo, J. y Parra Ramajo, B. (2017). Alternativas. Cuadernos de Trabajo Social, 24, 43-54."
+    },
+    {
+        eje: 1,
+        titulo: "El Modelo Social (Derechos Humanos)",
+        subtitulo: "La Discapacidad como Producto Social",
+        cuerpo: "La discapacidad no es una enfermedad individual, sino el resultado de la interacción entre deficiencias y BARRERAS. 'El modelo social sitúa la causa de la discapacidad en el entorno social, y no en la persona. Es la sociedad la que, al no tener en cuenta las necesidades de las personas con diversidad funcional, genera barreras' (Asís, 2013, citado en Cazorla Palomo & Parra Ramajo, 2017, p. 49).",
+        cita: "Cazorla Palomo, J. y Parra Ramajo, B. (2017). Alternativas. Cuadernos de Trabajo Social, 24, 43-54."
+    },
+    {
+        eje: 1,
+        titulo: "El Modelo de la Recuperación (Recovery)",
+        subtitulo: "Autonomía y Propósito de Vida",
+        cuerpo: "Apunta a que el estudiante desarrolle su proyecto de vida más allá del diagnóstico. 'La recuperación es un proceso personal, único e implica el desarrollo de un nuevo sentido de propósito y esperanza a medida que se crece más allá de los efectos de la enfermedad' (Anthony, 1993, citado en Cazorla Palomo & Parra Ramajo, 2017, p. 48).",
+        cita: "Cazorla Palomo, J. y Parra Ramajo, B. (2017). Alternativas. Cuadernos de Trabajo Social, 24, 43-54."
+    }
+];
 const LEYES_DB = [
     { 
         eje: 1, 
