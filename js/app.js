@@ -3,11 +3,9 @@
 // Archivo: js/app.js
 // ==========================================
 
-// Variables de estado global
 let currentUnitId = null;
 let currentScore = 0;
 
-// Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
     renderRoadmap();
 });
@@ -34,14 +32,12 @@ function renderRoadmap() {
     }).join('');
 }
 
-// 2. CONTROL DEL MODAL (Apertura de Unidad)
+// 2. CONTROL DEL MODAL
 function openUnit(id) {
-    currentUnitId = Number(id); // Normalizamos el ID para evitar errores de tipo
+    currentUnitId = Number(id);
     const unidad = UNIDADES.find(x => x.id === currentUnitId);
-    
-    if(!unidad) return; // Seguridad por si no encuentra la unidad
+    if(!unidad) return;
 
-    // Actualizamos los títulos del modal
     document.getElementById('modal-unit-number').innerText = `Unidad ${unidad.numero}`;
     document.getElementById('modal-unit-title').innerText = unidad.titulo;
     
@@ -54,10 +50,18 @@ function closeModal() {
     document.getElementById('unit-modal').classList.remove('active'); 
 }
 
-// 3. GENERADOR DEL MENÚ DINÁMICO
+// 3. GENERADOR DEL MENÚ DINÁMICO (Incluye Teoría)
 function generateMenuButtons() {
     const menuContainer = document.getElementById('menu-buttons-container');
+    
+    // Botón de Teoría (Destacado arriba)
     let html = `
+        <button onclick="openModule('teoria')" class="glass-panel p-8 rounded-3xl text-left glow-emerald transition-all group md:col-span-2">
+            <div class="flex items-center gap-6">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center shrink-0"><i class="fas fa-graduation-cap text-2xl text-emerald-400"></i></div>
+                <div><h3 class="text-xl font-bold text-white mb-1">Fundamentos Teóricos</h3><p class="text-sm text-slate-400 font-light">Modelos de la Discapacidad y Citas Bibliográficas.</p></div>
+            </div>
+        </button>
         <button onclick="openModule('leyes')" class="glass-panel p-8 rounded-3xl text-left glow-cyan transition-all group">
             <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6"><i class="fas fa-book-open text-2xl text-cyan-400"></i></div>
             <h3 class="text-xl font-bold text-white mb-2">Explorador Íntegro</h3>
@@ -69,7 +73,6 @@ function generateMenuButtons() {
             <p class="text-sm text-slate-400 font-light">Jurisprudencia de la CSJN de esta Unidad.</p>
         </button>`;
     
-    // El Estatuto Docente tiene sentido pedagógico en la Unidad 7 (según tu plan)
     if (currentUnitId === 7) {
         html += `
         <button onclick="openModule('estatuto')" class="glass-panel p-8 rounded-3xl text-left glow-emerald transition-all group">
@@ -96,7 +99,7 @@ function generateMenuButtons() {
     menuContainer.innerHTML = html;
 }
 
-// 4. NAVEGACIÓN INTERNA (VISTAS)
+// 4. NAVEGACIÓN INTERNA
 function showMenu() {
     document.querySelectorAll('.module-view').forEach(el => el.classList.remove('active'));
     document.getElementById('view-menu').classList.add('active');
@@ -108,7 +111,7 @@ function openModule(moduleName) {
     document.getElementById(`view-${moduleName}`).classList.add('active');
     document.getElementById('btn-back').classList.remove('hidden');
     
-    // Disparador del renderizado correspondiente
+    if(moduleName === 'teoria') renderTeoria();
     if(moduleName === 'leyes') renderLeyes();
     if(moduleName === 'casos') renderCasos();
     if(moduleName === 'estatuto') { document.getElementById('search-estatuto').value = ""; filterEstatuto(); }
@@ -116,19 +119,35 @@ function openModule(moduleName) {
     if(moduleName === 'cine') renderCine();
 }
 
-// ==========================================
-// 5. RENDERIZADORES (CON FILTROS ESTRICTOS)
-// ==========================================
+// 5. RENDERIZADORES
+function renderTeoria() {
+    const dataFiltrada = TEORIA_DB.filter(t => t.eje === currentUnitId);
+    const container = document.getElementById('teoria-content');
+    
+    if (dataFiltrada.length === 0) {
+        container.innerHTML = `<p class="text-slate-400 italic">No hay material teórico cargado para esta unidad.</p>`;
+        return;
+    }
+
+    container.innerHTML = dataFiltrada.map(t => `
+        <div class="glass-panel p-8 rounded-3xl mb-6 border-l-4 border-emerald-500 shadow-2xl">
+            <span class="text-emerald-400 text-xs font-bold uppercase tracking-widest">${t.subtitulo}</span>
+            <h4 class="text-2xl font-bold text-white mt-2 mb-4">${t.titulo}</h4>
+            <p class="text-slate-200 leading-relaxed text-lg mb-6">"${t.cuerpo}"</p>
+            <div class="pt-4 border-t border-slate-700/50 text-xs text-slate-500 italic">
+                Bibliografía: ${t.cita}
+            </div>
+        </div>
+    `).join('');
+}
 
 function renderLeyes() {
     const dataFiltrada = LEYES_DB.filter(item => item.eje === currentUnitId);
     const container = document.getElementById('leyes-content');
-    
     if (dataFiltrada.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 italic">No hay normativas cargadas específicamente para esta unidad aún.</p>`;
+        container.innerHTML = `<p class="text-slate-400 italic">No hay normativas cargadas.</p>`;
         return;
     }
-
     container.innerHTML = dataFiltrada.map(item => `
         <div class="glass-panel p-6 rounded-2xl mb-4 border-l-4 border-cyan-500">
             <h4 class="text-xl font-bold text-white mb-4">${item.titulo}</h4>
@@ -140,22 +159,20 @@ function renderLeyes() {
 function renderCasos() {
     const dataFiltrada = CASOS_DB.filter(c => c.eje === currentUnitId);
     const container = document.getElementById('casos-content');
-
     if (dataFiltrada.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 italic col-span-2">No hay jurisprudencia cargada específicamente para esta unidad aún.</p>`;
+        container.innerHTML = `<p class="text-slate-400 italic col-span-2">No hay jurisprudencia cargada.</p>`;
         return;
     }
-
     container.innerHTML = dataFiltrada.map(c => `
         <div class="flip-card" onclick="this.classList.toggle('flipped')">
             <div class="flip-card-inner">
-                <div class="flip-card-front glass-panel flex flex-col justify-center">
+                <div class="flip-card-front glass-panel flex flex-col justify-center p-6 text-center">
                     <div class="text-violet-400 mb-4"><i class="fas fa-gavel text-3xl"></i></div>
                     <h4 class="text-lg font-bold text-white mb-2">${c.tema}</h4>
                     <p class="text-slate-300 text-sm">${c.conflicto}</p>
-                    <p class="text-xs text-violet-400 font-bold mt-4 mt-auto uppercase tracking-widest"><i class="fas fa-sync-alt mr-2"></i> Clic para ver Fallo CSJN</p>
+                    <p class="text-xs text-violet-400 font-bold mt-4 uppercase tracking-widest"><i class="fas fa-sync-alt mr-2"></i> Clic para ver Fallo</p>
                 </div>
-                <div class="flip-card-back flex flex-col justify-center">
+                <div class="flip-card-back flex flex-col justify-center p-6 text-center">
                     <h4 class="text-lg font-bold text-white mb-2">Resolución CSJN</h4>
                     <p class="text-slate-200 text-sm italic">"${c.fallo}"</p>
                 </div>
@@ -166,19 +183,13 @@ function renderCasos() {
 
 function filterEstatuto() {
     const term = document.getElementById('search-estatuto').value.toLowerCase();
-    
-    // Doble filtro: Por Eje y por término de búsqueda
-    const dataFiltrada = ESTATUTO_DB
-        .filter(item => item.eje === currentUnitId)
-        .filter(item => item.art.toLowerCase().includes(term) || item.texto.toLowerCase().includes(term));
-    
+    const dataFiltrada = ESTATUTO_DB.filter(item => item.eje === currentUnitId)
+                                   .filter(item => item.art.toLowerCase().includes(term) || item.texto.toLowerCase().includes(term));
     const container = document.getElementById('estatuto-content');
-
     if (dataFiltrada.length === 0) {
-        container.innerHTML = `<p class="text-slate-400 italic">No hay artículos cargados para esta unidad o término de búsqueda.</p>`;
+        container.innerHTML = `<p class="text-slate-400 italic">No se encontraron artículos.</p>`;
         return;
     }
-
     container.innerHTML = dataFiltrada.map(item => `
         <div class="glass-panel p-6 rounded-2xl border-l-4 border-emerald-500">
             <h4 class="font-bold text-white mb-2">${item.art}</h4>
@@ -191,15 +202,12 @@ function renderChoice() {
     const dataFiltrada = CHOICE_DB.filter(q => q.eje === currentUnitId);
     const container = document.getElementById('choice-content');
     currentScore = 0;
-
     if (dataFiltrada.length === 0) {
         document.getElementById('score-display').innerText = `Puntaje: 0 / 0`;
-        container.innerHTML = `<p class="text-slate-400 italic">No hay preguntas de examen cargadas para esta unidad aún.</p>`;
+        container.innerHTML = `<p class="text-slate-400 italic">No hay preguntas cargadas.</p>`;
         return;
     }
-
     document.getElementById('score-display').innerText = `Puntaje: 0 / ${dataFiltrada.length}`;
-    
     container.innerHTML = dataFiltrada.map((q, localIndex) => `
         <div class="glass-panel p-8 rounded-3xl">
             <h4 class="text-xl font-bold text-white mb-6">${localIndex + 1}. ${q.pregunta}</h4>
@@ -216,11 +224,9 @@ function renderChoice() {
 }
 
 function checkAnswer(localIndex, isCorrect, btn, feedback, totalQuestions) {
-    // Bloquear botones después de responder
     document.querySelectorAll(`.opt-btn-${localIndex}`).forEach(b => { b.disabled = true; b.classList.add('opacity-50', 'cursor-not-allowed'); });
     const feedbackEl = document.getElementById(`feedback-${localIndex}`);
     feedbackEl.classList.remove('hidden');
-
     if(isCorrect) {
         btn.classList.replace('bg-slate-800/50', 'bg-emerald-900');
         btn.classList.replace('border-slate-700', 'border-emerald-500');
@@ -235,31 +241,16 @@ function checkAnswer(localIndex, isCorrect, btn, feedback, totalQuestions) {
         feedbackEl.classList.add('bg-red-500/20', 'text-red-300');
         feedbackEl.innerHTML = `<i class="fas fa-times-circle mr-2"></i> Incorrecto. ${feedback}`;
     }
-    
     document.getElementById('score-display').innerText = `Puntaje: ${currentScore} / ${totalQuestions}`;
 }
 
 function renderCine() {
-    // Filtramos si hay material de cine para esta unidad (aunque por ahora dejamos un fallback)
-    let dataFiltrada = [];
-    if(typeof CINE_DB !== 'undefined') {
-        dataFiltrada = CINE_DB.filter(c => c.eje === currentUnitId);
-    }
-    
+    let dataFiltrada = (typeof CINE_DB !== 'undefined') ? CINE_DB.filter(c => c.eje === currentUnitId) : [];
     const container = document.getElementById('cine-content');
-
     if (dataFiltrada.length === 0) {
-        // Fallback genérico si no hay nada en la base de datos para esta unidad
-        container.innerHTML = `
-            <div class="glass-panel p-8 rounded-3xl flex flex-col justify-center items-center text-center border-dashed border-2 border-pink-500/30 lg:col-span-2">
-                <i class="fas fa-film text-4xl text-pink-500/50 mb-4"></i>
-                <h4 class="font-bold text-white mb-2">Sin material audiovisual asignado</h4>
-                <p class="text-sm text-slate-400">Aún no se ha cargado una película o cápsula para la Unidad ${currentUnitId}.</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="glass-panel p-8 rounded-3xl flex flex-col items-center text-center border-dashed border-2 border-pink-500/30 lg:col-span-2"><i class="fas fa-film text-4xl text-pink-500/50 mb-4"></i><h4 class="font-bold text-white mb-2">Sin material audiovisual</h4><p class="text-sm text-slate-400">Aún no se ha cargado una película para esta unidad.</p></div>`;
         return;
     }
-
     container.innerHTML = dataFiltrada.map(c => `
         <div class="glass-panel p-4 rounded-3xl overflow-hidden">
             <div class="relative w-full rounded-2xl overflow-hidden" style="padding-top: 56.25%;">
